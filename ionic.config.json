@@ -1,0 +1,7 @@
+{
+  "name": "average-cost",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
