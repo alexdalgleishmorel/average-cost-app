@@ -1,0 +1,25 @@
+<ion-content>
+  <ion-card *ngFor="let asset of assets" (click)="assetSelected(asset)">
+    <ion-card-header>
+      <div class="card-title">
+        <ion-card-title color="primary">{{asset.symbol}}</ion-card-title>
+      </div>
+    </ion-card-header>
+    <ion-card-header>
+      <div class="card-content">
+        <div class="card-title">
+          <ion-card-subtitle>AVERAGE COST</ion-card-subtitle>
+          <ion-card-title color="primary">{{formatMoneyValue(asset.averageCost)}}</ion-card-title>
+        </div>
+        <div class="card-title">
+          <ion-card-subtitle>SHARES</ion-card-subtitle>
+          <ion-card-title color="primary">{{formatMoneyValue(asset.shares)}}</ion-card-title>
+        </div>
+        <div class="card-title">
+          <ion-card-subtitle>BUDGET</ion-card-subtitle>
+          <ion-card-title color="primary">{{formatMoneyValue(asset.budget)}}</ion-card-title>
+        </div>
+      </div>
+    </ion-card-header>
+  </ion-card> 
+</ion-content>

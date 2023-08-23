@@ -1,0 +1,46 @@
+.card-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.card-title {
+    text-align: center;
+}
+
+.chart-container {
+    width: 100%;
+    height: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.footer-content {
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 20px;
+}
+
+.empty-chart-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.empty-chart-message {
+    padding: 40px;
+}
+
+.slider-label {
+    text-align: center;
+}
+
+.spacer {
+    padding: 10px;
+}
