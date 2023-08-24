@@ -39,6 +39,6 @@ export class SettingsComponent {
       symbol: this.assetSymbol
     });
     this.formGroup.markAsPristine();
-    this.router.navigate(['/visualizer/chart']);
+    this.router.navigate(['/', 'visualizer', this.assetSymbol]);
   }
 }

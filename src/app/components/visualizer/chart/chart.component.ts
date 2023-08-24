@@ -40,14 +40,18 @@ export class ChartComponent implements OnInit {
       this.assetInformation.budget = asset.budget;
       this.assetInformation.shares = asset.shares;
 
-      if (asset.averageCost) {
+      if (asset.calculatedAverageCost) {
+        this.calculatedAverageCost = asset.calculatedAverageCost;
+      } else if (asset.averageCost) {
         this.calculatedAverageCost = asset.averageCost;
       }
 
       if (this.lineChart) {
         this.updateChart();
       } else {
-        this.createChart();
+        setTimeout(() => {
+          this.createChart();
+        }, 1000);
       }
 
     });
@@ -100,13 +104,15 @@ export class ChartComponent implements OnInit {
       };
 
       // Create the line chart
-      this.lineChart = new Chart('lineChart', {
-        type: 'line',
-        data: chartData,
-        options: options,
-      });
-
-      this.lineChart.update();
+      if (!this.assetService.chartViewActive) {
+        this.lineChart = new Chart('lineChart', {
+          type: 'line',
+          data: chartData,
+          options: options,
+        });
+        this.assetService.chartViewActive = true;
+        this.assetService.chartValueData = chartData.datasets[0].data;
+      }
     });
   }
 
@@ -131,13 +137,13 @@ export class ChartComponent implements OnInit {
   }
 
   updateAverageCost(event: any) {
-    if (!this.assetInformation.budget || !this.assetInformation.shares || !this.lineChart) {
+    if (!this.assetInformation.budget || !this.assetInformation.shares) {
       return;
     }
     const percentBudgetSpent = (event.detail.value/100);
     this.calculatedBudget = percentBudgetSpent*this.assetInformation.budget;
 
-    const assetPriceHistory = this.lineChart.data.datasets[0].data;
+    const assetPriceHistory = this.lineChart ? this.lineChart.data.datasets[0].data : this.assetService.chartValueData;
     const currentAssetMarketPrice = assetPriceHistory[assetPriceHistory.length-1];
     const sharesToBuy = this.calculatedBudget/currentAssetMarketPrice;
 
@@ -146,7 +152,9 @@ export class ChartComponent implements OnInit {
 
     this.calculatedAverageCost = (currentAssetBookValue+purchaseValue)/(this.assetInformation.shares+sharesToBuy);
 
-    this.updateChart();
+    this.assetInformation.calculatedAverageCost = this.calculatedAverageCost;
+
+    this.lineChart ? this.updateChart() : this.assetService.currentAssetSubject.next(this.assetInformation);
   }
 
   hasRequiredConfigurations() {

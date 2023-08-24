@@ -14,5 +14,6 @@ export class VisualizerComponent  implements OnInit {
 
   ionViewWillLeave() {
     this.assetService.updateCurrentAsset({ symbol: '' });
+    this.assetService.chartViewActive = false;
   }
 }

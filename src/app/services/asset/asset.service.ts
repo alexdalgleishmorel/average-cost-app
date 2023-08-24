@@ -9,6 +9,8 @@ import { ALPHA_VANTAGE_API_KEY, ALPHA_VANTAGE_API_URL, MOCK_STOCK_DATA } from 's
 export class AssetService {
 
   public currentAssetSubject: Subject<AssetInformation> = new Subject<AssetInformation>();
+  public chartViewActive: boolean = false;
+  public chartValueData: any[] = [];
 
   private functionType: string = 'TIME_SERIES_DAILY';
 
@@ -54,6 +56,7 @@ export class AssetService {
 export interface AssetInformation {
   averageCost?: number;
   budget?: number;
+  calculatedAverageCost?: number;
   shares?: number;
   symbol: string;
 }
