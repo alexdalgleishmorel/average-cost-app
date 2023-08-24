@@ -1,3 +1,11 @@
+<ion-header>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title class="card-title">ASSETS</ion-card-title>
+      <ion-card-subtitle class="card-title">HOME</ion-card-subtitle>
+    </ion-card-header>
+  </ion-card>
+</ion-header>
 <ion-content>
   <ion-card *ngFor="let asset of assets" (click)="assetSelected(asset)">
     <ion-card-header>
@@ -23,3 +31,8 @@
     </ion-card-header>
   </ion-card> 
 </ion-content>
+<ion-footer>
+  <div class="button-container">
+    <ion-button color="tertiary" expand="block">ADD</ion-button>
+  </div>
+</ion-footer>
