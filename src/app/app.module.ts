@@ -15,11 +15,13 @@ import { SettingsComponent } from './components/visualizer/settings/settings.com
 import { VisualizerComponent } from './components/visualizer/visualizer.component';
 import { AssetService } from './services/asset/asset.service';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AssetCreationModalComponent } from './components/asset-creation-modal/asset-creation-modal.component';
 
 @NgModule({
   declarations: [
     AccountComponent,
     AppComponent,
+    AssetCreationModalComponent,
     ChartComponent,
     HubComponent,
     SettingsComponent,

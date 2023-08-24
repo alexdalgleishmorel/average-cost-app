@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { AssetService } from 'src/app/services/asset/asset.service';
 
 @Component({
@@ -8,12 +9,24 @@ import { AssetService } from 'src/app/services/asset/asset.service';
 })
 export class VisualizerComponent  implements OnInit {
 
-  constructor(private assetService: AssetService) {}
+  private symbol: string;
+
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private assetService: AssetService
+  ) {
+    const symbol = this.activatedRoute.snapshot.paramMap.get('symbol');
+    this.symbol = symbol ? symbol : '';
+  }
 
   ngOnInit() {}
 
   ionViewWillLeave() {
-    this.assetService.updateCurrentAsset({ symbol: '' });
+    this.assetService.switchAssets('');
     this.assetService.chartViewActive = false;
+  }
+
+  ionViewWillEnter() {
+    this.assetService.switchAssets(this.symbol);
   }
 }

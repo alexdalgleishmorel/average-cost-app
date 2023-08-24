@@ -1,0 +1,77 @@
+<ion-header>
+  <ion-card color="primary">
+    <ion-card-header>
+      <ion-card-title class="card-title">ADD AN ASSET</ion-card-title>
+    </ion-card-header>
+  </ion-card>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle color="primary">SYMBOL</ion-card-subtitle>
+    </ion-card-header>
+  
+    <ion-card-content>
+      The asset symbol, used to retrieve its price history.
+      <ion-input
+        helperText="Enter the asset symbol"
+        errorText="Required"
+        [formControl]="symbolFormControl"
+      >
+      </ion-input>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle color="primary">AVERAGE COST</ion-card-subtitle>
+    </ion-card-header>
+  
+    <ion-card-content>
+      Your current average cost.
+      <ion-input
+        type="number"
+        helperText="Enter your average cost"
+        errorText="Required"
+        [formControl]="averageCostFormControl"
+      >
+      </ion-input>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle color="primary">SHARES OWNED</ion-card-subtitle>
+    </ion-card-header>
+  
+    <ion-card-content>
+      Your number of shares owned.
+      <ion-input
+        type="number"
+        helperText="Enter your shares"
+        errorText="Required"
+        [formControl]="sharesFormControl"
+      >
+      </ion-input>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle color="primary">BUDGET</ion-card-subtitle>
+    </ion-card-header>
+  
+    <ion-card-content>
+      Your maximum budget for purchasing more shares.
+      <ion-input
+        type="number"
+        helperText="Enter your budget"
+        errorText="Required"
+        [formControl]="budgetFormControl"
+      >
+      </ion-input>
+    </ion-card-content>
+  </ion-card>
+  <div class="button-container">
+    <ion-button expand="block" color="secondary" [disabled]="!formGroup.valid || formGroup.pristine" (click)="create()">CONFIRM</ion-button>
+    <ion-button expand="block" color="light" (click)="cancel()">CANCEL</ion-button>
+  </div>
+</ion-content>

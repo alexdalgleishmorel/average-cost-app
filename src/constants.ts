@@ -1,6 +1,10 @@
 export const ALPHA_VANTAGE_API_KEY: string = '2QIVJFO0R61O6ULU';
 export const ALPHA_VANTAGE_API_URL: string = 'https://www.alphavantage.co/query';
+export const STORAGE_PREFIX: string = 'average_cost_asset_data';
 
+export const MOCK_BAD_REQUEST = {
+    "Error Message": "Invalid API call. Please retry or visit the documentation (https://www.alphavantage.co/documentation/) for TIME_SERIES_DAILY."
+}
 
 export const MOCK_STOCK_DATA = {
     "Meta Data": {

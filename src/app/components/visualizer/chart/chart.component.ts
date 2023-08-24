@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import Chart from 'chart.js/auto';
-import { firstValueFrom } from 'rxjs';
 import { AssetInformation, AssetService, ChartDataPoint } from 'src/app/services/asset/asset.service';
+
+const currencyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+});
 
 @Component({
   selector: 'app-chart',
@@ -28,7 +32,7 @@ export class ChartComponent implements OnInit {
   ngOnInit() {
     this.assetService.currentAssetSubject.subscribe((asset: AssetInformation) => {
 
-      if (asset.symbol !== this.assetInformation.symbol) {
+      if (!this.isCurrentAssetView(asset)) {
         if (this.lineChart) {
           this.lineChart.destroy();
           this.lineChart = null;
@@ -50,88 +54,70 @@ export class ChartComponent implements OnInit {
         this.updateChart();
       } else {
         setTimeout(() => {
-          this.createChart();
+          this.createChart(asset.history?.dataPoints ? asset.history.dataPoints : []);
         }, 1000);
       }
 
     });
-
-    this.assetService.updateCurrentAsset(this.assetInformation);
   }
 
-  createChart() {
+  createChart(data: ChartDataPoint[]) {
+    if (this.lineChart) {
+      return;
+    }
 
-    firstValueFrom(this.assetService.getAssetPriceData()).then((data: ChartDataPoint[]) => {
-
-      if (this.lineChart) {
-        return;
-      }
-
-      const chartData = {
-        labels: data.map(data => data.date),
-        datasets: [
-          {
-            label: this.assetInformation?.symbol,
-            data: data.map(dataPoint => dataPoint.value),
-            fill: false,
-          },
-          {
-            label: 'Average Cost',
-            data: data.map((_dataPoint, index) => index === 0 || index === data.length - 1 ? this.calculatedAverageCost : null),
-            spanGaps: true,
-            borderColor: '#2dd36f',
-            backgroundColor: '#28ba62',
-          }
-        ],
-      };
-
-      if (!this.assetInformation.averageCost) {
-        chartData.datasets.pop();
-      }
-
-      // Configuration options for the chart
-      const options = {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          x: {
-            ticks: {
-              maxTicksLimit: 3
-            }
-          }
+    const chartData = {
+      labels: data.map(data => data.date),
+      datasets: [
+        {
+          label: this.assetInformation?.symbol,
+          data: data.map(dataPoint => dataPoint.value),
+          borderColor: '#4dc9f6',
+          backgroundColor: '#3399CC',
+          pointRadius: 1.5
         },
-        pointHitRadius: 25,
-      };
+        {
+          label: 'Average Cost',
+          data: data.map((_dataPoint, index) => index === 0 || index === data.length - 1 ? this.calculatedAverageCost : null),
+          spanGaps: true,
+          borderColor: '#2dd36f',
+          backgroundColor: '#28ba62'
+        }
+      ],
+    };
 
-      // Create the line chart
-      if (!this.assetService.chartViewActive) {
-        this.lineChart = new Chart('lineChart', {
-          type: 'line',
-          data: chartData,
-          options: options,
-        });
-        this.assetService.chartViewActive = true;
-        this.assetService.chartValueData = chartData.datasets[0].data;
-      }
-    });
+    // Configuration options for the chart
+    const options = {
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          ticks: {
+            maxTicksLimit: 3
+          }
+        }
+      },
+      pointHitRadius: 25,
+    };
+
+    // Create the line chart
+    if (!this.assetService.chartViewActive) {
+      this.lineChart = new Chart('lineChart', {
+        type: 'line',
+        data: chartData,
+        options: options,
+      });
+      this.assetService.chartViewActive = true;
+      this.assetService.chartValueData = chartData.datasets[0].data;
+    }
   }
 
   updateChart() {
+    this.lineChart.options.animation = { duration: 0 };
+
     const data: number[] = this.lineChart.data.datasets[0].data;
 
-    if (!(this.lineChart.data.datasets.length > 1)) {
-      this.lineChart.data.datasets.push(
-        {
-          label: 'Average Cost',
-          data: [],
-          spanGaps: true,
-          borderColor: '#2dd36f',
-          backgroundColor: '#28ba62',
-        }
-      );
-    }
-
-    this.lineChart.data.datasets[1].data = data.map((_dataPoint, index) => index === 0 || index === data.length - 1 ? this.calculatedAverageCost : null);
+    this.lineChart.data.datasets[1].data[this.lineChart.data.datasets[1].data.length-1] = this.calculatedAverageCost;
+    this.lineChart.data.datasets[1].data[0] = this.calculatedAverageCost;
 
     this.lineChart.update();
   }
@@ -161,15 +147,15 @@ export class ChartComponent implements OnInit {
     return !!this.assetInformation.averageCost && !!this.assetInformation.budget && !!this.assetInformation.shares && !!this.assetInformation.symbol;
   }
 
-  pinFormatter(value: number) {
+  isCurrentAssetView(asset: AssetInformation): boolean {
+    return asset.symbol === this.assetInformation.symbol;
+  }
+
+  pinFormatter(value: number): string {
     return `${value}%`;
   }
 
-  formatCalculatedAverageCost() {
-    return `$ ${this.calculatedAverageCost.toFixed(2)}`;
-  }
-
-  formatCalculatedBudget() {
-    return `$ ${this.calculatedBudget.toFixed(2)}`;
+  formatCurrency(value: number) {
+    return value ? currencyFormatter.format(value): '-';
   }
 }

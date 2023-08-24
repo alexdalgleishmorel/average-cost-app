@@ -1,38 +1,52 @@
 <ion-header>
-  <ion-card color="primary">
+  <ion-card>
     <ion-card-header>
-      <ion-card-title class="card-title">ASSETS</ion-card-title>
-      <ion-card-subtitle class="card-title">HOME</ion-card-subtitle>
+      <ion-card-subtitle class="card-title">ASSETS</ion-card-subtitle>
     </ion-card-header>
   </ion-card>
 </ion-header>
 <ion-content>
-  <ion-card *ngFor="let asset of assets" (click)="assetSelected(asset)">
-    <ion-card-header>
-      <div class="card-title">
-        <ion-card-title color="primary">{{asset.symbol}}</ion-card-title>
-      </div>
-    </ion-card-header>
-    <ion-card-header>
-      <div class="card-content">
-        <div class="card-title">
-          <ion-card-subtitle>AVERAGE COST</ion-card-subtitle>
-          <ion-card-title color="primary">{{formatMoneyValue(asset.averageCost)}}</ion-card-title>
-        </div>
-        <div class="card-title">
-          <ion-card-subtitle>SHARES</ion-card-subtitle>
-          <ion-card-title color="primary">{{formatMoneyValue(asset.shares)}}</ion-card-title>
-        </div>
-        <div class="card-title">
-          <ion-card-subtitle>BUDGET</ion-card-subtitle>
-          <ion-card-title color="primary">{{formatMoneyValue(asset.budget)}}</ion-card-title>
-        </div>
-      </div>
-    </ion-card-header>
-  </ion-card> 
+  <ion-item-sliding *ngFor="let asset of assets">
+    <ion-item>
+      <ion-card (click)="assetSelected(asset)">
+        <ion-card-header>
+          <div class="card-title">
+            <ion-card-title color="primary">{{asset.symbol}}</ion-card-title>
+          </div>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="card-content">
+            <div class="card-title">
+              <ion-card-content>
+                <ion-card-subtitle class="detail">BUDGET</ion-card-subtitle>
+                <ion-text color="primary">{{formatMoneyValue(asset.budget)}}</ion-text>
+              </ion-card-content>
+            </div>
+            <div class="row">
+              <div class="card-title">
+                <ion-card-content>
+                  <ion-card-subtitle class="detail">AVERAGE COST</ion-card-subtitle>
+                  <ion-text color="primary">{{formatMoneyValue(asset.averageCost)}}</ion-text>
+                </ion-card-content>
+              </div>
+              <div class="card-title">
+                <ion-card-content>
+                  <ion-card-subtitle class="detail">SHARES</ion-card-subtitle>
+                  <ion-text color="primary">{{asset.shares}}</ion-text>
+                </ion-card-content>
+              </div>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card> 
+    </ion-item>
+    <ion-item-options>
+      <ion-item-option color="danger" (click)="removeAsset(asset)">Delete</ion-item-option>
+    </ion-item-options>
+  </ion-item-sliding>
 </ion-content>
 <ion-footer>
   <div class="button-container">
-    <ion-button color="tertiary" expand="block">ADD</ion-button>
+    <ion-button color="primary" expand="block" (click)="openAssetCreationModal()">ADD NEW ASSET</ion-button>
   </div>
 </ion-footer>
