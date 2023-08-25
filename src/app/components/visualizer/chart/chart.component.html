@@ -1,34 +1,21 @@
-<ion-card *ngIf="assetInformation?.symbol">
-  <ion-card-header>
-    <div class="card-content">
-      <div class="card-title">
-        <ion-card-subtitle>AVERAGE COST</ion-card-subtitle>
-        <ion-card-title color="primary">{{formatCurrency(calculatedAverageCost)}}</ion-card-title>
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <div class="card-content">
+        <div class="card-title">
+          <ion-card-subtitle>AVERAGE COST</ion-card-subtitle>
+          <ion-card-title color="primary">{{formatCurrency(calculatedAverageCost)}}</ion-card-title>
+        </div>
+        <div class="card-title">
+          <ion-card-subtitle>BUDGET REQUIRED</ion-card-subtitle>
+          <ion-card-title color="success">{{formatCurrency(calculatedBudget)}}</ion-card-title>
+        </div>
       </div>
-      <div class="card-title">
-        <ion-card-subtitle>BUDGET REQUIRED</ion-card-subtitle>
-        <ion-card-title color="success">{{formatCurrency(calculatedBudget)}}</ion-card-title>
-      </div>
-    </div>
-  </ion-card-header>
-</ion-card>
-
-<ion-content [scrollY]="false">
+    </ion-card-header>
+  </ion-card>
   <div class="chart-container"><canvas id="lineChart"></canvas></div>
-</ion-content>
-
-<ion-footer>
-  <div class="footer-content" *ngIf="hasRequiredConfigurations() else missingConfigurations">
+  <div class="footer-content">
     <ion-range [pin]="true" [pinFormatter]="pinFormatter" (ionInput)="updateAverageCost($event)"></ion-range>
     <ion-card-subtitle color="primary" class="slider-label">% BUDGET SPENT</ion-card-subtitle>
   </div>
-</ion-footer>
-
-<ng-template #missingConfigurations>
-  <ion-card *ngIf="assetInformation?.symbol">
-    <ion-card-header>
-        <ion-card-subtitle color="warning" class="card-title">MISSING CONFIGURATIONS</ion-card-subtitle>
-    </ion-card-header>
-    <ion-card-content class="card-title">Update your asset information in the settings tab.</ion-card-content>
-  </ion-card>
-</ng-template>
+</ion-content>
