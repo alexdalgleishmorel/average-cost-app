@@ -25,6 +25,8 @@ export class AssetCreationModalComponent {
     budgetFormControl: this.budgetFormControl
   });
 
+  public assetAlreadyExistsError: boolean = false;
+
   constructor(
     private _formBuilder: FormBuilder,
     private assetService: AssetService,
@@ -32,7 +34,14 @@ export class AssetCreationModalComponent {
     private router: Router
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.symbolFormControl.valueChanges.subscribe(value => {
+      this.assetAlreadyExistsError = false;
+      if (value && value !== value.toUpperCase()) {
+        this.symbolFormControl.setValue(value?.toUpperCase());
+      }
+    });
+  }
 
   cancel() {
     this.modalCtrl.dismiss();
@@ -43,13 +52,22 @@ export class AssetCreationModalComponent {
       return;
     }
 
-    this.assetService.saveNewAsset({
-      averageCost: Number(this.averageCostFormControl.value),
-      budget: Number(this.budgetFormControl.value),
-      shares: Number(this.sharesFormControl.value),
-      symbol: this.symbolFormControl.value,
-      type: this.assetType
-    });
+    try {
+      this.assetService.saveNewAsset({
+        averageCost: Number(this.averageCostFormControl.value),
+        budget: Number(this.budgetFormControl.value),
+        shares: Number(this.sharesFormControl.value),
+        symbol: this.symbolFormControl.value,
+        type: this.assetType
+      });
+    } catch (AssetAlreadyExistsError) {
+      this.assetAlreadyExistsError = true;
+      this.formGroup.markAsPristine();
+      return;
+    }
+
+    this.assetAlreadyExistsError = false;
+
     this.formGroup.markAsPristine();
     this.router.navigate(['/', 'visualizer', this.symbolFormControl.value]);
     this.modalCtrl.dismiss();

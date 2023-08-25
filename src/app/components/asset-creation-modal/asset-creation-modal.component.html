@@ -97,6 +97,11 @@
       </ion-input>
     </ion-card-content>
   </ion-card>
+
+  <ion-card-subtitle class="card-title" color="danger" *ngIf="assetAlreadyExistsError">
+    <ion-text color="primary">{{symbolFormControl.value}}</ion-text> already exists in your profile
+  </ion-card-subtitle>
+
   <div class="button-container">
     <ion-button expand="block" color="secondary" [disabled]="!formGroup.valid || formGroup.pristine" (click)="create()">CONFIRM</ion-button>
     <ion-button expand="block" color="light" (click)="cancel()">CANCEL</ion-button>
