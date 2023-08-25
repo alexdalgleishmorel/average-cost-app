@@ -5,8 +5,9 @@
     </ion-card-header>
   </ion-card>
 </ion-header>
+
 <ion-content>
-  <ion-list>
+  <ion-list *ngIf="assets.length else noAssets">
     <ion-item-sliding *ngFor="let asset of assets">
       <ion-item (click)="assetSelected(asset)">
         <ion-label class="center-label">
@@ -33,8 +34,19 @@
     </ion-item-sliding>
   </ion-list>
 </ion-content>
-<ion-footer>
+
+<ion-footer *ngIf="assets.length">
   <div class="button-container">
     <ion-button color="primary" expand="block" (click)="openAssetCreationModal()">ADD NEW ASSET</ion-button>
   </div>
 </ion-footer>
+
+<ng-template #noAssets>
+  <div class="content">
+    <ion-fab>
+      <ion-fab-button (click)="openAssetCreationModal()">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </div>
+</ng-template>
