@@ -51,4 +51,8 @@ export class AssetCreationModalComponent {
     this.router.navigate(['/', 'visualizer', this.symbolFormControl.value]);
     this.modalCtrl.dismiss();
   }
+
+  onAssetTypeChange(event: any) {
+    console.log(event.detail.value);
+  }
 }

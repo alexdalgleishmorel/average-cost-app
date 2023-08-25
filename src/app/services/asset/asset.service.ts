@@ -130,7 +130,7 @@ export class AssetService {
         }
         return {
           dataPoints: formattedData.reverse(),
-          lastUpdated: data['Meta Data']['3. Last Refreshed']
+          lastUpdated: moment().format('YYYY-MM-DD')
         };
       })
     );
