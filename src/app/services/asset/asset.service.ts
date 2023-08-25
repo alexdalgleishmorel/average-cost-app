@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, Subject, map, of } from 'rxjs';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import * as moment from 'moment';
 
-import { ALPHA_VANTAGE_API_KEY, ALPHA_VANTAGE_API_URL, MOCK_STOCK_DATA, STORAGE_PREFIX } from 'src/constants';
+import { ALPHA_VANTAGE_API_KEY, ALPHA_VANTAGE_API_URL, STORAGE_PREFIX } from 'src/constants';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,10 @@ export class AssetService {
 
   private functionType: string = 'TIME_SERIES_DAILY';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
   updateAssetInformation(updatedAsset: AssetInformation) {
     const assetStorageName: string = this.getAssetStorageName(updatedAsset.symbol);
@@ -74,10 +78,17 @@ export class AssetService {
     // Update the price history if it's outdated, saving the new history as well
     if (!asset.history || asset.history.lastUpdated !== moment().format('YYYY-MM-DD')) {
       this.getAssetPriceData(asset.symbol).subscribe((data: ChartData) => {
-        asset.history = data;
-        localStorage.setItem(assetStorageName, JSON.stringify(asset));
-
-        this.currentAssetSubject.next(asset);
+        if (data.dataPoints.length) {
+          asset.history = data;
+          localStorage.setItem(assetStorageName, JSON.stringify(asset));
+          this.currentAssetSubject.next(asset);
+        } else {
+          if (!asset.history) {
+            // If no history already exists for this asset, then we've failed to create it and it should be deleted
+            this.removeAsset(asset.symbol);
+          }
+          this.router.navigate(['/', 'hub']);
+        }
       });
     } else {
       // Set the currentAssetSubject to this asset
@@ -120,6 +131,13 @@ export class AssetService {
     const url = `${ALPHA_VANTAGE_API_URL}?function=${this.functionType}&symbol=${assetSymbol}&outputsize=full&apikey=${ALPHA_VANTAGE_API_KEY}`;
     return this.http.get(url).pipe(
       map((data: any) => {
+        if (!data.hasOwnProperty('Time Series (Daily)')) {
+          return {
+            dataPoints: [],
+            lastUpdated: moment().format('YYYY-MM-DD')
+          };
+        }
+
         const formattedData: ChartDataPoint[] = [];
         const timeSeries = data['Time Series (Daily)'];
         for (let date in timeSeries) {
