@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, catchError, map, of } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of, retry } from 'rxjs';
 import * as moment from 'moment';
 
 import { ALPHA_VANTAGE_API_KEY, ALPHA_VANTAGE_API_URL, STORAGE_PREFIX } from 'src/constants';
 import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
+import { AssetFailureModalComponent, AssetFailureType } from 'src/app/components/asset-failure-modal/asset-failure-modal.component';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +20,7 @@ export class AssetService {
   private functionType: string = 'TIME_SERIES_DAILY';
 
   constructor(
+    private modalCtrl: ModalController,
     private http: HttpClient,
     private router: Router
   ) {}
@@ -77,18 +80,31 @@ export class AssetService {
 
     // Update the price history if it's outdated, saving the new history as well
     if (!asset.history || asset.history.lastUpdated !== moment().format('YYYY-MM-DD')) {
-      this.getAssetPriceData(asset.symbol).subscribe((data: ChartData) => {
+      this.getAssetPriceData(asset.symbol).subscribe(async (data: ChartData) => {
         if (data.dataPoints.length) {
           asset.history = data;
           localStorage.setItem(assetStorageName, JSON.stringify(asset));
-          this.currentAssetSubject.next(asset);
         } else {
+
+          let modal = await this.modalCtrl.create({
+            component: AssetFailureModalComponent,
+            componentProps: {
+              failureType: !asset.history ? AssetFailureType.CREATION : AssetFailureType.UPDATE,
+              asset: asset,
+              lastUpdated: data.lastUpdated
+            }
+          });
+          modal.present();
+
           if (!asset.history) {
-            // If no history already exists for this asset, then we've failed to create it and it should be deleted
+            // If no history already exists for this asset, then we've failed to create it
             this.removeAsset(asset.symbol);
+
+            this.router.navigate(['/', 'hub']);
+            return;
           }
-          this.router.navigate(['/', 'hub']);
         }
+        this.currentAssetSubject.next(asset);
       });
     } else {
       // Set the currentAssetSubject to this asset
@@ -172,6 +188,12 @@ export interface AssetInformation {
   history?: ChartData;
   shares?: number;
   symbol: string;
+  type?: AssetType;
+}
+
+export enum AssetType {
+  CRYPTO = 'CRYPTO',
+  STOCK = 'STOCK'
 }
 
 export interface ChartData {

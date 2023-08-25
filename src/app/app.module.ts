@@ -16,12 +16,14 @@ import { VisualizerComponent } from './components/visualizer/visualizer.componen
 import { AssetService } from './services/asset/asset.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AssetCreationModalComponent } from './components/asset-creation-modal/asset-creation-modal.component';
+import { AssetFailureModalComponent } from './components/asset-failure-modal/asset-failure-modal.component';
 
 @NgModule({
   declarations: [
     AccountComponent,
     AppComponent,
     AssetCreationModalComponent,
+    AssetFailureModalComponent,
     ChartComponent,
     HubComponent,
     SettingsComponent,
