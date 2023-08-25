@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of } from 'rxjs';
 import * as moment from 'moment';
 
 import { ALPHA_VANTAGE_API_KEY, ALPHA_VANTAGE_API_URL, STORAGE_PREFIX } from 'src/constants';
@@ -150,6 +150,12 @@ export class AssetService {
           dataPoints: formattedData.reverse(),
           lastUpdated: moment().format('YYYY-MM-DD')
         };
+      }),
+      catchError(() => {
+        return of({
+          dataPoints: [],
+          lastUpdated: moment().format('YYYY-MM-DD')
+        });
       })
     );
   }
