@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, catchError, map, of, retry } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of } from 'rxjs';
 import * as moment from 'moment';
 
 import { ALPHA_VANTAGE_API_KEY, ALPHA_VANTAGE_API_URL, STORAGE_PREFIX } from 'src/constants';
@@ -17,7 +17,8 @@ export class AssetService {
   public chartViewActive: boolean = false;
   public chartValueData: any[] = [];
 
-  private functionType: string = 'TIME_SERIES_DAILY';
+  private stockFunctionType: string = 'TIME_SERIES_DAILY';
+  private cryptoFunctionType: string = 'DIGITAL_CURRENCY_DAILY';
 
   constructor(
     private modalCtrl: ModalController,
@@ -80,7 +81,7 @@ export class AssetService {
 
     // Update the price history if it's outdated, saving the new history as well
     if (!asset.history || asset.history.lastUpdated !== moment().format('YYYY-MM-DD')) {
-      this.getAssetPriceData(asset.symbol).subscribe(async (data: ChartData) => {
+      this.getAssetPriceData(asset).subscribe(async (data: ChartData) => {
         if (data.dataPoints.length) {
           asset.history = data;
           localStorage.setItem(assetStorageName, JSON.stringify(asset));
@@ -143,11 +144,16 @@ export class AssetService {
     localStorage.removeItem(assetStorageName);
   }
 
-  private getAssetPriceData(assetSymbol: string): Observable<ChartData> {
-    const url = `${ALPHA_VANTAGE_API_URL}?function=${this.functionType}&symbol=${assetSymbol}&outputsize=full&apikey=${ALPHA_VANTAGE_API_KEY}`;
+  private getAssetPriceData(asset: AssetInformation): Observable<ChartData> {
+    let url = `${ALPHA_VANTAGE_API_URL}?function=${this.stockFunctionType}&symbol=${asset.symbol}&outputsize=full&apikey=${ALPHA_VANTAGE_API_KEY}`;
+
+    if (asset.type === AssetType.CRYPTO) {
+      url = `${ALPHA_VANTAGE_API_URL}?function=${this.cryptoFunctionType}&symbol=${asset.symbol}&market=USD&outputsize=full&apikey=${ALPHA_VANTAGE_API_KEY}`;
+    }
+
     return this.http.get(url).pipe(
       map((data: any) => {
-        if (!data.hasOwnProperty('Time Series (Daily)')) {
+        if (!data.hasOwnProperty('Time Series (Daily)') && !data.hasOwnProperty('Time Series (Digital Currency Daily)')) {
           return {
             dataPoints: [],
             lastUpdated: moment().format('YYYY-MM-DD')
@@ -155,11 +161,12 @@ export class AssetService {
         }
 
         const formattedData: ChartDataPoint[] = [];
-        const timeSeries = data['Time Series (Daily)'];
+        const timeSeries = asset.type === AssetType.CRYPTO ? data['Time Series (Digital Currency Daily)'] : data['Time Series (Daily)'];
+        
         for (let date in timeSeries) {
           formattedData.push({
             date: date,
-            value: Number(timeSeries[date]['4. close'])
+            value: asset.type === AssetType.CRYPTO ? Number(timeSeries[date]['4a. close (USD)']) : Number(timeSeries[date]['4. close'])
           });
         }
         return {
@@ -209,7 +216,7 @@ export interface ChartDataPoint {
 export class AssetAlreadyExistsError extends Error {
   constructor() {
     super();
-    this.message = 'Assset already exists in local storage'
+    this.message = 'Asset already exists in local storage'
   }
 }
 

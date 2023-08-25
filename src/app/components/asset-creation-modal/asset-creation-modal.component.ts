@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { AssetService } from 'src/app/services/asset/asset.service';
+import { AssetService, AssetType } from 'src/app/services/asset/asset.service';
 
 @Component({
   selector: 'app-asset-creation-modal',
@@ -10,6 +10,8 @@ import { AssetService } from 'src/app/services/asset/asset.service';
   styleUrls: ['./asset-creation-modal.component.scss'],
 })
 export class AssetCreationModalComponent {
+
+  public assetType: AssetType = AssetType.STOCK;
 
   public symbolFormControl = new FormControl('', [Validators.required]);
   public averageCostFormControl = new FormControl(null, [Validators.required]);
@@ -45,7 +47,8 @@ export class AssetCreationModalComponent {
       averageCost: Number(this.averageCostFormControl.value),
       budget: Number(this.budgetFormControl.value),
       shares: Number(this.sharesFormControl.value),
-      symbol: this.symbolFormControl.value
+      symbol: this.symbolFormControl.value,
+      type: this.assetType
     });
     this.formGroup.markAsPristine();
     this.router.navigate(['/', 'visualizer', this.symbolFormControl.value]);
@@ -53,6 +56,14 @@ export class AssetCreationModalComponent {
   }
 
   onAssetTypeChange(event: any) {
-    console.log(event.detail.value);
+    this.assetType = event.detail.value;
+  }
+
+  getStockAssetType(): AssetType {
+    return AssetType.STOCK;
+  }
+
+  getCryptoAssetType(): AssetType {
+    return AssetType.CRYPTO;
   }
 }

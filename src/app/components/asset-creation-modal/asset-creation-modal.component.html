@@ -8,12 +8,12 @@
 
 <ion-content>
   <div class="segment-container">
-    <ion-segment value="STOCK" (ionChange)="onAssetTypeChange($event)">
-      <ion-segment-button value="STOCK">
-        <ion-label>STOCK</ion-label>
+    <ion-segment [value]="getStockAssetType()" (ionChange)="onAssetTypeChange($event)">
+      <ion-segment-button [value]="getStockAssetType()">
+        <ion-label>{{getStockAssetType()}}</ion-label>
       </ion-segment-button>
-      <ion-segment-button value="CRYPTO">
-        <ion-label>CRYPTO</ion-label>
+      <ion-segment-button [value]="getCryptoAssetType()">
+        <ion-label>{{getCryptoAssetType()}}</ion-label>
       </ion-segment-button>
     </ion-segment>
   </div>
@@ -24,7 +24,7 @@
     </ion-card-header>
   
     <ion-card-content>
-      The asset symbol, used to retrieve its price history.
+      The asset symbol, used to retrieve its price history
       <ion-input
         helperText="Enter the asset symbol"
         errorText="Required"
@@ -39,7 +39,7 @@
     </ion-card-header>
   
     <ion-card-content>
-      Your current average cost.
+      Your current average cost <ion-text *ngIf="assetType === getCryptoAssetType()">(USD)</ion-text>
       <ion-input
         type="number"
         helperText="Enter your average cost"
@@ -49,16 +49,32 @@
       </ion-input>
     </ion-card-content>
   </ion-card>
-  <ion-card>
+  <ion-card *ngIf="assetType === getStockAssetType()">
     <ion-card-header>
       <ion-card-subtitle color="primary">SHARES OWNED</ion-card-subtitle>
     </ion-card-header>
   
     <ion-card-content>
-      Your number of shares owned.
+      Your amount of shares owned
       <ion-input
         type="number"
         helperText="Enter your shares"
+        errorText="Required"
+        [formControl]="sharesFormControl"
+      >
+      </ion-input>
+    </ion-card-content>
+  </ion-card>
+  <ion-card *ngIf="assetType === getCryptoAssetType()">
+    <ion-card-header>
+      <ion-card-subtitle color="primary">AMOUNT OWNED</ion-card-subtitle>
+    </ion-card-header>
+  
+    <ion-card-content>
+      Your amount owned
+      <ion-input
+        type="number"
+        helperText="Enter your amount (i.e. 0.53 BTC)"
         errorText="Required"
         [formControl]="sharesFormControl"
       >
@@ -71,7 +87,7 @@
     </ion-card-header>
   
     <ion-card-content>
-      Your maximum budget for purchasing more shares.
+      Your maximum budget for purchasing more
       <ion-input
         type="number"
         helperText="Enter your budget"
