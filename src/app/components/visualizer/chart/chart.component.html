@@ -1,21 +1,23 @@
 <ion-content>
-  <ion-card>
-    <ion-card-header>
-      <div class="card-content">
-        <div class="card-title">
-          <ion-card-subtitle>AVERAGE COST</ion-card-subtitle>
-          <ion-card-title color="primary">{{formatCurrency(calculatedAverageCost)}}</ion-card-title>
+  <div class="content">
+    <ion-card>
+      <ion-card-header>
+        <div class="card-content">
+          <div class="card-title">
+            <ion-card-subtitle>AVERAGE COST</ion-card-subtitle>
+            <ion-card-title color="primary">{{formatCurrency(calculatedAverageCost)}}</ion-card-title>
+          </div>
+          <div class="card-title">
+            <ion-card-subtitle>BUDGET REQUIRED</ion-card-subtitle>
+            <ion-card-title color="success">{{formatCurrency(calculatedBudget)}}</ion-card-title>
+          </div>
         </div>
-        <div class="card-title">
-          <ion-card-subtitle>BUDGET REQUIRED</ion-card-subtitle>
-          <ion-card-title color="success">{{formatCurrency(calculatedBudget)}}</ion-card-title>
-        </div>
-      </div>
-    </ion-card-header>
-  </ion-card>
-  <div class="chart-container"><canvas id="lineChart"></canvas></div>
-  <div class="footer-content">
-    <ion-range [pin]="true" [pinFormatter]="pinFormatter" (ionInput)="updateAverageCost($event)"></ion-range>
-    <ion-card-subtitle color="primary" class="slider-label">% BUDGET SPENT</ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+    <div class="chart-container"><canvas id="lineChart"></canvas></div>
+    <div class="footer-content">
+      <ion-range [pin]="true" [pinFormatter]="pinFormatter" (ionInput)="updateAverageCost($event)"></ion-range>
+      <ion-card-subtitle color="primary" class="slider-label">% BUDGET SPENT</ion-card-subtitle>
+    </div>
   </div>
 </ion-content>

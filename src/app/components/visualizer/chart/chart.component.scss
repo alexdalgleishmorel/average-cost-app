@@ -44,3 +44,13 @@
 .spacer {
     padding: 10px;
 }
+
+.content {
+    width: 100%;
+    height: 100%;
+
+    @media screen and (orientation: landscape) {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+}
