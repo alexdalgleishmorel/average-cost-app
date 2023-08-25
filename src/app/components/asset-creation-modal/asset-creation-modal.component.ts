@@ -38,7 +38,7 @@ export class AssetCreationModalComponent {
     this.symbolFormControl.valueChanges.subscribe(value => {
       this.assetAlreadyExistsError = false;
       if (value && value !== value.toUpperCase()) {
-        this.symbolFormControl.setValue(value?.toUpperCase());
+        this.symbolFormControl.setValue(value.toUpperCase());
       }
     });
   }
