@@ -3,41 +3,39 @@
     padding: 10px;
 }
 
-.centered {
-    text-align: center;
-}
-
-.centered-item {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.card-content {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-}
-
 .card-title {
     text-align: center;
 }
 
-.row {
+.center-label {
     display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }
 
-.detail {
-    white-space: nowrap;
-}
-
-.title-container {
+.label-content {
     width: 100%;
     display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .sections {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}
+
+.spacer {
+    padding: 10px;
 }
