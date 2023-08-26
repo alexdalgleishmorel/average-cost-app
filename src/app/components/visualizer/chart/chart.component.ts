@@ -22,6 +22,29 @@ export class ChartComponent implements OnInit {
 
   public assetInformation: AssetInformation;
 
+  averageCostPlugin = {
+    id: 'average-cost-plugin',
+    afterDraw: (chart: any) => {
+      console.log('executing afterDraw');
+      if (chart.config.type !== 'line') {
+        return;
+      }
+  
+      const ctx = chart.ctx;
+      const yAxis = chart.scales.y;
+      const yValue = yAxis.getPixelForValue(this.calculatedAverageCost);
+  
+      ctx.save();
+      ctx.strokeStyle = '#2dd36f';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(chart.chartArea.left, yValue);
+      ctx.lineTo(chart.chartArea.right, yValue);
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private assetService: AssetService
@@ -78,8 +101,7 @@ export class ChartComponent implements OnInit {
         },
         {
           label: 'Average Cost',
-          data: data.map((_dataPoint, index) => index === 0 || index === data.length - 1 ? this.calculatedAverageCost : null),
-          spanGaps: true,
+          data: [],
           borderColor: '#2dd36f',
           backgroundColor: '#28ba62'
         }
@@ -104,6 +126,7 @@ export class ChartComponent implements OnInit {
       this.lineChart = new Chart('lineChart', {
         type: 'line',
         data: chartData,
+        plugins: [this.averageCostPlugin],
         options: options,
       });
       this.assetService.chartViewActive = true;
@@ -112,13 +135,6 @@ export class ChartComponent implements OnInit {
   }
 
   updateChart() {
-    this.lineChart.options.animation = { duration: 0 };
-
-    const data: number[] = this.lineChart.data.datasets[0].data;
-
-    this.lineChart.data.datasets[1].data[this.lineChart.data.datasets[1].data.length-1] = this.calculatedAverageCost;
-    this.lineChart.data.datasets[1].data[0] = this.calculatedAverageCost;
-
     this.lineChart.update();
   }
 
