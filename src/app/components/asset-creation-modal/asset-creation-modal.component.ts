@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { AssetService, AssetType } from 'src/app/services/asset/asset.service';
+import { AssetService, AssetType, Currency } from 'src/app/services/asset/asset.service';
 
 @Component({
   selector: 'app-asset-creation-modal',
@@ -17,22 +17,28 @@ export class AssetCreationModalComponent {
   public averageCostFormControl = new FormControl(null, [Validators.required]);
   public sharesFormControl = new FormControl(null, [Validators.required]);
   public budgetFormControl = new FormControl(null, [Validators.required]);
+  public currencyFormControl = new FormControl(Currency.USD, []);
 
   public formGroup: FormGroup = this._formBuilder.group({
     symbolFormControl: this.symbolFormControl,
     averageCostFormControl: this.averageCostFormControl,
+    currencyFormControl: this.currencyFormControl,
     sharesFormControl: this.sharesFormControl,
     budgetFormControl: this.budgetFormControl
   });
 
   public assetAlreadyExistsError: boolean = false;
 
+  public currencies: string[];
+
   constructor(
     private _formBuilder: FormBuilder,
     private assetService: AssetService,
     private modalCtrl: ModalController,
     private router: Router
-  ) { }
+  ) {
+    this.currencies = Object.keys(Currency);
+  }
 
   ngOnInit() {
     this.symbolFormControl.valueChanges.subscribe(value => {
@@ -56,6 +62,7 @@ export class AssetCreationModalComponent {
       this.assetService.saveNewAsset({
         averageCost: Number(this.averageCostFormControl.value),
         budget: Number(this.budgetFormControl.value),
+        currency: this.currencyFormControl.value ? this.currencyFormControl.value : Currency.USD,
         shares: Number(this.sharesFormControl.value),
         symbol: this.symbolFormControl.value,
         type: this.assetType

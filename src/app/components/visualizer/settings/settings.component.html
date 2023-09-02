@@ -5,6 +5,19 @@
       <ion-card-subtitle class="centered">SETTINGS</ion-card-subtitle>
     </ion-card-header>
   </ion-card>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle color="primary">CURRENCY</ion-card-subtitle>
+    </ion-card-header>
+  
+    <ion-card-content>
+      <ion-select
+        [formControl]="currencyFormControl"
+      >
+        <ion-select-option *ngFor="let currency of currencies" [value]="currency">{{currency}}</ion-select-option>
+      </ion-select>
+    </ion-card-content>
+  </ion-card>
   <div class="card-row">
     <ion-card>
       <ion-card-header>
@@ -43,7 +56,6 @@
     </ion-card-header>
   
     <ion-card-content>
-      Your maximum budget for purchasing more
       <ion-input
         type="number"
         helperText="Enter your budget"

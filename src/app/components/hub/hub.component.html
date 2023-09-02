@@ -1,12 +1,24 @@
 <ion-header class="header-padding">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-subtitle class="card-title">ASSETS</ion-card-subtitle>
-    </ion-card-header>
+  <ion-card (click)="assetSelected({ symbol: 'NETWORTH' })">
+      <ion-card-header>
+        <div class="sections">
+          <div class="content">
+            <ion-text color="medium"><b>NETWORTH</b></ion-text>
+            <ion-text color="primary">{{formatMoneyValue(networthInformation.bookValue)}}</ion-text>
+          </div>
+          <div class="content">
+            <ion-text color="medium"><b>MARKET VALUE</b></ion-text>
+            <ion-text color="primary">{{formatMoneyValue(networthInformation.marketValue)}}</ion-text>
+          </div>
+        </div>
+      </ion-card-header>
   </ion-card>
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="updateNetworth($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-list *ngIf="assets.length else noAssets">
     <ion-item-sliding *ngFor="let asset of assets">
       <ion-item (click)="assetSelected(asset)">

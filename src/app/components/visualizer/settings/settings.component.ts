@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AssetInformation, AssetService } from 'src/app/services/asset/asset.service';
+import { AssetInformation, AssetService, Currency } from 'src/app/services/asset/asset.service';
 
 @Component({
   selector: 'app-settings',
@@ -11,16 +11,20 @@ import { AssetInformation, AssetService } from 'src/app/services/asset/asset.ser
 export class SettingsComponent {
 
   public averageCostFormControl = new FormControl(0, [Validators.required]);
+  public currencyFormControl = new FormControl(Currency.USD, []);
   public sharesFormControl = new FormControl(0, [Validators.required]);
   public budgetFormControl = new FormControl(0, [Validators.required]);
 
   public formGroup: FormGroup = this._formBuilder.group({
     averageCostFormControl: this.averageCostFormControl,
+    currencyFormControl: this.currencyFormControl,
     sharesFormControl: this.sharesFormControl,
     budgetFormControl: this.budgetFormControl
   });
 
   public assetSymbol: string;
+
+  public currencies: string[];
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -29,6 +33,7 @@ export class SettingsComponent {
     private router: Router
   ) {
     this.assetSymbol = this.activatedRoute.snapshot.parent?.paramMap.get('symbol')!;
+    this.currencies = Object.keys(Currency);
   }
 
   ngOnInit() {
@@ -45,6 +50,7 @@ export class SettingsComponent {
     this.assetService.updateAssetInformation({
       averageCost: Number(this.averageCostFormControl.value),
       budget: Number(this.budgetFormControl.value),
+      currency: this.currencyFormControl.value ? this.currencyFormControl.value : Currency.USD,
       shares: Number(this.sharesFormControl.value),
       symbol: this.assetSymbol
     });

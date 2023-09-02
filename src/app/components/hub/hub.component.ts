@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { AssetInformation, AssetService } from 'src/app/services/asset/asset.service';
+import { AssetInformation, AssetService, NetworthInformation } from 'src/app/services/asset/asset.service';
 import { AssetCreationModalComponent } from '../asset-creation-modal/asset-creation-modal.component';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
@@ -17,15 +17,31 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 export class HubComponent {
 
   public assets: AssetInformation[] = [];
+  public networthInformation: NetworthInformation;
 
   constructor(
     private assetService: AssetService,
     private modalCtrl: ModalController,
     private router: Router
-  ) {}
+  ) {
+    this.networthInformation = {bookValue: 0, marketValue: 0};
+
+    assetService.networthSubject.subscribe(networthInformation => {
+      this.networthInformation = networthInformation;
+    });
+
+    this.updateNetworth();
+  }
 
   ionViewWillEnter() {
     this.assets = this.assetService.getAllAssets();
+  }
+
+  updateNetworth(event?: any) {
+    this.assetService.getNetworthInformation();
+    if (event) {
+      event.target.complete();
+    }
   }
 
   assetSelected(asset: AssetInformation) {

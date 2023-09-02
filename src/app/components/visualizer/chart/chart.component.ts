@@ -22,17 +22,19 @@ export class ChartComponent implements OnInit {
 
   public assetInformation: AssetInformation;
 
+  public networthBookValue: number = 0;
+  public networthMarketValue: number = 0;
+
   averageCostPlugin = {
     id: 'average-cost-plugin',
     afterDraw: (chart: any) => {
-      console.log('executing afterDraw');
       if (chart.config.type !== 'line') {
         return;
       }
   
       const ctx = chart.ctx;
       const yAxis = chart.scales.y;
-      const yValue = yAxis.getPixelForValue(this.calculatedAverageCost);
+      const yValue = yAxis.getPixelForValue(this.assetInformation.symbol !== 'NETWORTH' ? this.calculatedAverageCost : this.calculatedBudget);
   
       ctx.save();
       ctx.strokeStyle = '#2dd36f';
@@ -62,6 +64,8 @@ export class ChartComponent implements OnInit {
         }
         return;
       }
+
+      if (this.assetInformation.symbol === 'NETWORTH') { this.calculatedBudget = asset.budget ? asset.budget : 0 }
 
       this.assetInformation.averageCost = asset.averageCost;
       this.assetInformation.budget = asset.budget;
@@ -100,7 +104,7 @@ export class ChartComponent implements OnInit {
           pointRadius: 1.5
         },
         {
-          label: 'Average Cost',
+          label: this.assetInformation.symbol !== 'NETWORTH' ? 'Average Cost' : 'Book Value',
           data: [],
           borderColor: '#2dd36f',
           backgroundColor: '#28ba62'

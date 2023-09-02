@@ -14,6 +14,7 @@ import { AssetFailureModalComponent, AssetFailureType } from 'src/app/components
 export class AssetService {
 
   public currentAssetSubject: BehaviorSubject<AssetInformation> = new BehaviorSubject<AssetInformation>({ symbol: '' });
+  public networthSubject: BehaviorSubject<NetworthInformation> = new BehaviorSubject<NetworthInformation>({bookValue: 0, marketValue: 0});
   public chartViewActive: boolean = false;
   public chartValueData: any[] = [];
 
@@ -35,18 +36,12 @@ export class AssetService {
       throw new AssetNotFoundError();
     }
 
-    // Retrieve the current asset information from local storage
-    let asset: AssetInformation = JSON.parse(storedData);
-
     // Update the asset information in storage
-    asset.averageCost = updatedAsset.averageCost;
-    asset.budget = updatedAsset.budget;
-    asset.shares = updatedAsset.shares;
-    localStorage.setItem(assetStorageName, JSON.stringify(asset));
+    localStorage.setItem(assetStorageName, JSON.stringify(updatedAsset));
 
     // Check if this is the current asset subject, update the subject in this case
     if (this.currentAssetSubject.getValue().symbol === updatedAsset.symbol) {
-      this.currentAssetSubject.next(asset);
+      this.currentAssetSubject.next(updatedAsset);
     }
   }
 
@@ -125,7 +120,18 @@ export class AssetService {
           throw new AssetNotFoundError();
         }
 
-        assets.push(JSON.parse(storedData));
+        const asset: AssetInformation = JSON.parse(storedData);
+
+        if (asset.symbol === 'CADUSD' || asset.symbol === 'NETWORTH') {
+          continue;
+        }
+
+        if (!asset.currency) {
+          asset.currency = Currency.USD;
+          this.updateAssetInformation(asset);
+        }
+
+        assets.push(asset);
 
       }
     }
@@ -183,15 +189,122 @@ export class AssetService {
     );
   }
 
+  public getNetworthInformation() {
+    const assetStorageName: string = this.getAssetStorageName('CADUSD');
+
+    let asset: AssetInformation = { symbol: 'CADUSD' };
+
+    const storedData = localStorage.getItem(assetStorageName);
+
+    if (!storedData || JSON.parse(storedData).history.lastUpdated !== moment().format('YYYY-MM-DD')) {
+      this.getAssetPriceData(asset).subscribe((data: ChartData) => {
+        asset.history = data;
+
+        if (!storedData) {
+          this.saveNewAsset(asset);
+        } else {
+          this.updateAssetInformation(asset);
+        }
+
+        this.computeNetworth(asset.history.dataPoints.length ? asset.history.dataPoints : []);
+      });
+    } else {
+      const asset: AssetInformation = JSON.parse(storedData);
+      this.computeNetworth(asset.history?.dataPoints.length ? asset.history.dataPoints : []);
+    }
+  }
+
+  private computeNetworth(cadUsdConversionHistory: ChartDataPoint[]) {
+    if (!cadUsdConversionHistory.length) {
+      return;
+    }
+
+    const cadUsdConversion: number = cadUsdConversionHistory[cadUsdConversionHistory.length-1].value;
+
+    let assets: AssetInformation[] = this.getAllAssets();
+    let bookValue: number = 0;
+    let marketValue: number = 0;
+
+    let marketValueHistoryDictInitial: { [date: string]: number } = {};
+    let marketValueHistoryDictFinal: { [date: string]: number } = {};
+    let marketValueHistory: ChartDataPoint[] = [];
+
+    assets.forEach(asset => {
+      if (asset.shares && asset.averageCost && asset.history?.dataPoints.length) {
+        asset.history.dataPoints.forEach(dataPoint => {
+          if (marketValueHistoryDictInitial[dataPoint.date]) {
+            marketValueHistoryDictInitial[dataPoint.date] += 1;
+          } else {
+            marketValueHistoryDictInitial[dataPoint.date] = 1;
+          }
+        });
+      }
+    });
+
+    assets.forEach((asset: AssetInformation) => {
+
+      if (asset.shares && asset.averageCost && asset.history?.dataPoints.length) {
+        bookValue += asset.currency === Currency.USD ? asset.shares * asset.averageCost : (asset.shares * asset.averageCost)*(1/cadUsdConversion);
+        marketValue += asset.currency === Currency.USD ? asset.shares * asset.history.dataPoints[asset.history.dataPoints.length-1].value : (asset.shares * asset.history.dataPoints[asset.history.dataPoints.length-1].value)*(1/cadUsdConversion);
+
+        let index: number = 0;
+        for (let date in marketValueHistoryDictInitial) {
+          if (marketValueHistoryDictInitial[date] === assets.length) {
+            if (marketValueHistoryDictFinal[date]) {
+              marketValueHistoryDictFinal[date] += asset.shares * asset.history.dataPoints[index].value;
+            } else {
+              marketValueHistoryDictFinal[date] = asset.shares * asset.history.dataPoints[index].value;
+            }
+          }
+          index += 1;
+        }
+      }
+    });
+
+    for (let date in marketValueHistoryDictFinal) {
+      marketValueHistory.push({
+        date: date,
+        value: marketValueHistoryDictFinal[date]
+      });
+    }
+
+    this.networthSubject.next({
+      bookValue: bookValue,
+      marketValue: marketValue,
+    });
+
+    const asset = {
+      symbol: 'NETWORTH',
+      calculatedAverageCost: marketValueHistory[marketValueHistory.length-1].value,
+      budget: bookValue,
+      history: {
+        dataPoints: marketValueHistory,
+        lastUpdated: moment().format('YYYY-MM-DD')
+      }
+    };
+
+    try {
+      this.updateAssetInformation(asset);
+    } catch (AssetNotFoundError) {
+      this.saveNewAsset(asset);
+    }
+  }
+
   private getAssetStorageName(assetSymbol: string): string {
     return STORAGE_PREFIX + '/' + assetSymbol;
   }
+}
+
+export interface NetworthInformation {
+  bookValue: number;
+  marketValue: number;
 }
 
 export interface AssetInformation {
   averageCost?: number;
   budget?: number;
   calculatedAverageCost?: number;
+  currency?: Currency;
   history?: ChartData;
   shares?: number;
   symbol: string;
@@ -201,6 +314,11 @@ export interface AssetInformation {
 export enum AssetType {
   CRYPTO = 'CRYPTO',
   STOCK = 'STOCK'
+}
+
+export enum Currency {
+  CAD = 'CAD',
+  USD = 'USD'
 }
 
 export interface ChartData {

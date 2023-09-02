@@ -1,4 +1,4 @@
-<ion-content>
+<ion-content *ngIf="assetInformation.symbol !== 'NETWORTH' else networth">
   <div class="content">
     <ion-card>
       <ion-card-header>
@@ -21,3 +21,24 @@
     </div>
   </div>
 </ion-content>
+
+<ng-template #networth>
+  <ion-content scrollY="true">
+      <ion-card>
+        <ion-card-header>
+          <div class="networth-card-content">
+            <div class="card-title">
+              <ion-card-subtitle>NETWORTH</ion-card-subtitle>
+              <ion-card-title color="primary">{{formatCurrency(calculatedAverageCost)}}</ion-card-title>
+            </div>
+            <div class="spacer"></div>
+            <div class="card-title">
+              <ion-card-subtitle>BOOK VALUE</ion-card-subtitle>
+              <ion-card-title color="success">{{formatCurrency(calculatedBudget)}}</ion-card-title>
+            </div>
+          </div>
+        </ion-card-header>
+      </ion-card>
+      <div class="chart-container"><canvas id="lineChart"></canvas></div>
+  </ion-content>
+</ng-template>

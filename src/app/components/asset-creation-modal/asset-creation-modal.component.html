@@ -33,6 +33,21 @@
       </ion-input>
     </ion-card-content>
   </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle color="primary">CURRENCY</ion-card-subtitle>
+    </ion-card-header>
+  
+    <ion-card-content>
+      <ion-select
+        [formControl]="currencyFormControl"
+      >
+        <ion-select-option *ngFor="let currency of currencies" [value]="currency">{{currency}}</ion-select-option>
+      </ion-select>
+    </ion-card-content>
+  </ion-card>
+  
   <ion-card>
     <ion-card-header>
       <ion-card-subtitle color="primary">AVERAGE COST</ion-card-subtitle>

@@ -21,6 +21,10 @@ export class VisualizerComponent  implements OnInit {
 
   ngOnInit() {}
 
+  isNetworthView(): boolean {
+    return this.symbol === 'NETWORTH';
+  }
+
   ionViewWillLeave() {
     this.assetService.switchAssets('');
     this.assetService.chartViewActive = false;
