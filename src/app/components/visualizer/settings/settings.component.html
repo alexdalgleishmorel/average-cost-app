@@ -7,18 +7,33 @@
   </ion-card>
   <ion-card>
     <ion-card-header>
-      <ion-card-subtitle color="primary">CURRENCY</ion-card-subtitle>
+      <ion-card-subtitle color="primary">SHARES OWNED</ion-card-subtitle>
     </ion-card-header>
   
     <ion-card-content>
-      <ion-select
-        [formControl]="currencyFormControl"
+      <ion-input
+        type="number"
+        helperText="Enter your shares"
+        errorText="Required"
+        [formControl]="sharesFormControl"
       >
-        <ion-select-option *ngFor="let currency of currencies" [value]="currency">{{currency}}</ion-select-option>
-      </ion-select>
+      </ion-input>
     </ion-card-content>
   </ion-card>
   <div class="card-row">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-subtitle color="primary">CURRENCY</ion-card-subtitle>
+      </ion-card-header>
+    
+      <ion-card-content>
+        <ion-select
+          [formControl]="currencyFormControl"
+        >
+          <ion-select-option *ngFor="let currency of currencies" [value]="currency">{{currency}}</ion-select-option>
+        </ion-select>
+      </ion-card-content>
+    </ion-card>
     <ion-card>
       <ion-card-header>
         <ion-card-subtitle color="primary">AVERAGE COST</ion-card-subtitle>
@@ -30,21 +45,6 @@
           helperText="Enter your average cost"
           errorText="Required"
           [formControl]="averageCostFormControl"
-        >
-        </ion-input>
-      </ion-card-content>
-    </ion-card>
-    <ion-card>
-      <ion-card-header>
-        <ion-card-subtitle color="primary">SHARES OWNED</ion-card-subtitle>
-      </ion-card-header>
-    
-      <ion-card-content>
-        <ion-input
-          type="number"
-          helperText="Enter your shares"
-          errorText="Required"
-          [formControl]="sharesFormControl"
         >
         </ion-input>
       </ion-card-content>
