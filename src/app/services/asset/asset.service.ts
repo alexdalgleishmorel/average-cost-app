@@ -25,7 +25,9 @@ export class AssetService {
     private modalCtrl: ModalController,
     private http: HttpClient,
     private router: Router
-  ) {}
+  ) {
+    this.getNetworthInformation();
+  }
 
   updateAssetInformation(updatedAsset: AssetInformation) {
     const assetStorageName: string = this.getAssetStorageName(updatedAsset.symbol);
@@ -246,10 +248,10 @@ export class AssetService {
     }
 
     let bookValue: number = 0;
-    let marketValue: number = 0;
 
     let marketValueHistoryDictInitial: { [date: string]: number } = {};
     let marketValueHistoryDictFinal: { [date: string]: number } = {};
+    let marketValuePriceLookup: { [date: string]: number } = {};
     let marketValueHistory: ChartDataPoint[] = [];
 
     assets.forEach(asset => {
@@ -260,29 +262,32 @@ export class AssetService {
           } else {
             marketValueHistoryDictInitial[dataPoint.date] = 1;
           }
+          if (asset.shares) {
+            if (marketValuePriceLookup[dataPoint.date]) {
+              marketValuePriceLookup[dataPoint.date] += asset.currency === Currency.USD ? asset.shares * dataPoint.value : (asset.shares * dataPoint.value)*(1/cadUsdConversion);
+            } else {
+              marketValuePriceLookup[dataPoint.date] = asset.currency === Currency.USD ? asset.shares * dataPoint.value : (asset.shares * dataPoint.value)*(1/cadUsdConversion);
+            }
+          }
         });
       }
     });
 
-    assets.forEach((asset: AssetInformation) => {
-
+    assets.forEach(asset => {
       if (asset.shares && asset.averageCost && asset.history?.dataPoints.length) {
         bookValue += asset.currency === Currency.USD ? asset.shares * asset.averageCost : (asset.shares * asset.averageCost)*(1/cadUsdConversion);
-        marketValue += asset.currency === Currency.USD ? asset.shares * asset.history.dataPoints[asset.history.dataPoints.length-1].value : (asset.shares * asset.history.dataPoints[asset.history.dataPoints.length-1].value)*(1/cadUsdConversion);
-
-        let index: number = 0;
-        for (let date in marketValueHistoryDictInitial) {
-          if (marketValueHistoryDictInitial[date] === assets.length) {
-            if (marketValueHistoryDictFinal[date]) {
-              marketValueHistoryDictFinal[date] += asset.shares * asset.history.dataPoints[index].value;
-            } else {
-              marketValueHistoryDictFinal[date] = asset.shares * asset.history.dataPoints[index].value;
-            }
-          }
-          index += 1;
-        }
       }
     });
+
+    for (let date in marketValueHistoryDictInitial) {
+      if (marketValueHistoryDictInitial[date] === assets.length) {
+        if (marketValueHistoryDictFinal[date]) {
+          marketValueHistoryDictFinal[date] += marketValuePriceLookup[date];
+        } else {
+          marketValueHistoryDictFinal[date] = marketValuePriceLookup[date];
+        }
+      }
+    }
 
     for (let date in marketValueHistoryDictFinal) {
       marketValueHistory.push({
@@ -293,7 +298,7 @@ export class AssetService {
 
     this.networthSubject.next({
       bookValue: bookValue,
-      marketValue: marketValue,
+      marketValue: marketValuePriceLookup[marketValueHistory[marketValueHistory.length-1].date],
     });
 
     const asset = {
