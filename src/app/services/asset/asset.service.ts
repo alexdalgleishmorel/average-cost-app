@@ -108,6 +108,24 @@ export class AssetService {
     }
   }
 
+  getAsset(assetSymbol: string): AssetInformation | null {
+    if (!assetSymbol) {
+      this.currentAssetSubject.next({ symbol: '' });
+      return null;
+    }
+
+    const assetStorageName: string = this.getAssetStorageName(assetSymbol);
+
+    const storedData = localStorage.getItem(assetStorageName);
+
+    if (!storedData) {
+      return null;
+    }
+
+    // Retrieve the asset information from local storage
+    return JSON.parse(storedData);
+  }
+
   getAllAssets(): AssetInformation[] {
     let assets: AssetInformation[] = [];
     for (let i = 0; i < localStorage.length; i++) {
@@ -222,6 +240,11 @@ export class AssetService {
     const cadUsdConversion: number = cadUsdConversionHistory[cadUsdConversionHistory.length-1].value;
 
     let assets: AssetInformation[] = this.getAllAssets();
+
+    if (!assets.length) {
+      return;
+    }
+
     let bookValue: number = 0;
     let marketValue: number = 0;
 

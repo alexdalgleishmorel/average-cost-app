@@ -45,6 +45,9 @@ export class HubComponent {
   }
 
   assetSelected(asset: AssetInformation) {
+    if (asset.symbol === 'NETWORTH' && !this.assetService.getAsset('NETWORTH')) {
+      return;
+    }
     this.router.navigate([`/visualizer/${asset.symbol}`]);
   }
 
