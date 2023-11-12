@@ -29,8 +29,12 @@
                 <ion-text color="primary">{{formatMoneyValue(asset.averageCost)}}</ion-text>
               </div>
               <div class="content">
-                <ion-text color="medium"><b>TOTAL BUDGET</b></ion-text>
-                <ion-text color="primary">{{formatMoneyValue(asset.budget)}}</ion-text>
+                <ion-text color="medium"><b>MARKET VALUE</b></ion-text>
+                <div>
+                  <ion-text color="primary">{{formatMoneyValue(getAssetMarketValue(asset))}}</ion-text>
+                  &nbsp;
+                  <ion-text [color]="getNetworthChange() >= 0 ? 'success' : 'danger'">{{formatChangeValue(getAssetMarketValueChange(asset))}}</ion-text>
+                </div>
               </div>
             </div>
           </div>
@@ -40,7 +44,6 @@
         <ion-item-option color="danger" (click)="removeAsset(asset)">Delete</ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
-    <div class="spacer"></div>
   </div>
 </ion-content>
 

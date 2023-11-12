@@ -58,11 +58,26 @@ export class HubComponent {
     modal.present();
   }
 
+  getAssetMarketValue(asset: AssetInformation): number {
+    if (!asset.shares) {
+      return 0;
+    }
+    return asset.shares*(asset.history?.dataPoints[asset.history.dataPoints.length-1].value || 0);
+  }
+
+  getAssetMarketValueChange(asset: AssetInformation): number {
+    if (!asset.shares || !asset.averageCost) {
+      return 0;
+    }
+    const marketPrice = asset.history?.dataPoints[asset.history.dataPoints.length-1].value || 0;
+    return ((asset.shares * marketPrice) - (asset.shares * asset.averageCost))/(asset.shares * asset.averageCost);
+  }
+
   getNetworthChange(): number {
-    return this.networthInformation.marketValue-this.networthInformation.bookValue;
+    return (this.networthInformation.marketValue-this.networthInformation.bookValue)/this.networthInformation.bookValue;
   }
 
   formatChangeValue(change: number): string {
-    return `(${currencyFormatter.format(change)})`;
+    return `${(change*100).toFixed(2)}%`;
   }
 }
