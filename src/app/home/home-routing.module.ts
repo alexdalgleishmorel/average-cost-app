@@ -24,7 +24,7 @@ const routes: Routes = [
         children: []
       },
       {
-        path: 'account',
+        path: 'settings',
         component: AccountComponent
       },
       {
@@ -41,7 +41,7 @@ const routes: Routes = [
             component: ChartComponent
           },
           {
-            path: 'settings',
+            path: 'configuration',
             component: SettingsComponent
           }
         ]

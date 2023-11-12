@@ -32,7 +32,7 @@ export class HubComponent {
 
   ionViewWillEnter() {
     this.assets = this.assetService.getAllAssets();
-    this.assetService.getNetworthInformation();
+    this.assetService.updateNetworthInformation();
   }
 
   assetSelected(asset: AssetInformation) {

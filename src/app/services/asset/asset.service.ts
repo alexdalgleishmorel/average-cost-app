@@ -26,7 +26,7 @@ export class AssetService {
     private http: HttpClient,
     private router: Router
   ) {
-    this.getNetworthInformation();
+    this.updateNetworthInformation();
   }
 
   updateAssetInformation(updatedAsset: AssetInformation) {
@@ -168,6 +168,8 @@ export class AssetService {
     }
 
     localStorage.removeItem(assetStorageName);
+
+    this.updateNetworthInformation();
   }
 
   private getAssetPriceData(asset: AssetInformation): Observable<ChartData> {
@@ -209,7 +211,7 @@ export class AssetService {
     );
   }
 
-  public getNetworthInformation() {
+  public updateNetworthInformation() {
     const assetStorageName: string = this.getAssetStorageName('CADUSD');
 
     let asset: AssetInformation = { symbol: 'CADUSD' };
