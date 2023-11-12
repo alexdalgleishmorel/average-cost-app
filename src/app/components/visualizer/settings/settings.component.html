@@ -1,71 +1,75 @@
 <ion-content>
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title class="centered">{{assetSymbol}}</ion-card-title>
-      <ion-card-subtitle class="centered">SETTINGS</ion-card-subtitle>
-    </ion-card-header>
-  </ion-card>
-  <ion-card>
-    <ion-card-header>
-      <ion-card-subtitle color="primary">SHARES OWNED</ion-card-subtitle>
-    </ion-card-header>
-  
-    <ion-card-content>
-      <ion-input
-        type="number"
-        helperText="Enter your shares"
-        errorText="Required"
-        [formControl]="sharesFormControl"
-      >
-      </ion-input>
-    </ion-card-content>
-  </ion-card>
-  <div class="card-row">
-    <ion-card>
+  <div class="content">
+    <ion-card class="title">
       <ion-card-header>
-        <ion-card-subtitle color="primary">CURRENCY</ion-card-subtitle>
+        <ion-card-title class="centered">{{assetSymbol}}</ion-card-title>
+        <ion-card-subtitle class="centered">SETTINGS</ion-card-subtitle>
       </ion-card-header>
-    
-      <ion-card-content>
-        <ion-select
-          [formControl]="currencyFormControl"
-        >
-          <ion-select-option *ngFor="let currency of currencies" [value]="currency">{{currency}}</ion-select-option>
-        </ion-select>
-      </ion-card-content>
     </ion-card>
-    <ion-card>
-      <ion-card-header>
-        <ion-card-subtitle color="primary">AVERAGE COST</ion-card-subtitle>
-      </ion-card-header>
-    
-      <ion-card-content>
-        <ion-input
-          type="number"
-          helperText="Enter your average cost"
-          errorText="Required"
-          [formControl]="averageCostFormControl"
-        >
-        </ion-input>
-      </ion-card-content>
-    </ion-card>
+    <div class="configuration-container">
+      <div class="configuration-input-container">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-subtitle color="primary">SHARES OWNED</ion-card-subtitle>
+          </ion-card-header>
+        
+          <ion-card-content>
+            <ion-input
+              type="number"
+              helperText="Enter your shares"
+              errorText="Required"
+              [formControl]="sharesFormControl"
+            >
+            </ion-input>
+          </ion-card-content>
+        </ion-card>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-subtitle color="primary">CURRENCY</ion-card-subtitle>
+          </ion-card-header>
+        
+          <ion-card-content>
+            <ion-select
+              [formControl]="currencyFormControl"
+            >
+              <ion-select-option *ngFor="let currency of currencies" [value]="currency">{{currency}}</ion-select-option>
+            </ion-select>
+          </ion-card-content>
+        </ion-card>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-subtitle color="primary">AVERAGE COST</ion-card-subtitle>
+          </ion-card-header>
+        
+          <ion-card-content>
+            <ion-input
+              type="number"
+              helperText="Enter your average cost"
+              errorText="Required"
+              [formControl]="averageCostFormControl"
+            >
+            </ion-input>
+          </ion-card-content>
+        </ion-card>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-subtitle color="primary">BUDGET</ion-card-subtitle>
+          </ion-card-header>
+        
+          <ion-card-content>
+            <ion-input
+              type="number"
+              helperText="Enter your budget"
+              errorText="Required"
+              [formControl]="budgetFormControl"
+            >
+            </ion-input>
+          </ion-card-content>
+        </ion-card>
+      </div>
+      <ion-button color="primary" expand="block" [disabled]="!formGroup.valid || formGroup.pristine" (click)="saveConfiguration()">
+        SAVE
+      </ion-button>
+    </div>
   </div>
-  <ion-card>
-    <ion-card-header>
-      <ion-card-subtitle color="primary">BUDGET</ion-card-subtitle>
-    </ion-card-header>
-  
-    <ion-card-content>
-      <ion-input
-        type="number"
-        helperText="Enter your budget"
-        errorText="Required"
-        [formControl]="budgetFormControl"
-      >
-      </ion-input>
-    </ion-card-content>
-  </ion-card>
-  <ion-button color="primary" expand="block" [disabled]="!formGroup.valid || formGroup.pristine" (click)="saveConfiguration()">
-    UPDATE
-  </ion-button>
 </ion-content>
