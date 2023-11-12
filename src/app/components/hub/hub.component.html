@@ -1,14 +1,14 @@
 <ion-header class="header-padding">
-  <ion-card (click)="assetSelected({ symbol: 'NETWORTH' })">
+  <ion-card class="networth-card" (click)="assetSelected({ symbol: 'NETWORTH' })">
       <ion-card-header>
-        <div class="sections">
-          <div class="content">
+        <div class="even-row">
+          <div class="centered">
             <ion-text color="medium"><b>NETWORTH</b></ion-text>
-            <ion-text color="primary">{{formatMoneyValue(networthInformation.bookValue)}}</ion-text>
-          </div>
-          <div class="content">
-            <ion-text color="medium"><b>MARKET VALUE</b></ion-text>
-            <ion-text color="primary">{{formatMoneyValue(networthInformation.marketValue)}}</ion-text>
+            <div>
+              <ion-text color="primary">{{formatMoneyValue(networthInformation.marketValue)}}</ion-text>
+              &nbsp;
+              <ion-text [color]="getNetworthChange() >= 0 ? 'success' : 'danger'">{{formatChangeValue(getNetworthChange())}}</ion-text>
+            </div>
           </div>
         </div>
       </ion-card-header>
@@ -16,33 +16,31 @@
 </ion-header>
 
 <ion-content>
-  <div class="content">
-    <div class="list" *ngFor="let asset of assets">
-      <ion-item-sliding>
-        <ion-item class="item" (click)="assetSelected(asset)">
-          <ion-label class="center-label">
-            <div class="label-content">
-              <ion-text color="primary"><h1><b>{{asset.symbol}}</b></h1></ion-text>
-              <div class="spacer"></div>
-              <div class="sections">
-                <div class="content">
-                  <ion-text color="medium"><b>AVERAGE COST</b></ion-text>
-                  <ion-text color="primary">{{formatMoneyValue(asset.averageCost)}}</ion-text>
-                </div>
-                <div class="content">
-                  <ion-text color="medium"><b>TOTAL BUDGET</b></ion-text>
-                  <ion-text color="primary">{{formatMoneyValue(asset.budget)}}</ion-text>
-                </div>
+  <div class="list" *ngFor="let asset of assets">
+    <ion-item-sliding>
+      <ion-item class="item" (click)="assetSelected(asset)">
+        <ion-label class="center-label">
+          <div class="label-content">
+            <ion-text color="primary"><h1><b>{{asset.symbol}}</b></h1></ion-text>
+            <div class="spacer"></div>
+            <div class="sections">
+              <div class="content">
+                <ion-text color="medium"><b>AVERAGE COST</b></ion-text>
+                <ion-text color="primary">{{formatMoneyValue(asset.averageCost)}}</ion-text>
+              </div>
+              <div class="content">
+                <ion-text color="medium"><b>TOTAL BUDGET</b></ion-text>
+                <ion-text color="primary">{{formatMoneyValue(asset.budget)}}</ion-text>
               </div>
             </div>
-          </ion-label>
-        </ion-item>
-        <ion-item-options>
-          <ion-item-option color="danger" (click)="removeAsset(asset)">Delete</ion-item-option>
-        </ion-item-options>
-      </ion-item-sliding>
-      <div class="spacer"></div>
-    </div>
+          </div>
+        </ion-label>
+      </ion-item>
+      <ion-item-options>
+        <ion-item-option color="danger" (click)="removeAsset(asset)">Delete</ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+    <div class="spacer"></div>
   </div>
 </ion-content>
 

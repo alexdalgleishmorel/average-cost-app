@@ -281,11 +281,7 @@ export class AssetService {
 
     for (let date in marketValueHistoryDictInitial) {
       if (marketValueHistoryDictInitial[date] === assets.length) {
-        if (marketValueHistoryDictFinal[date]) {
-          marketValueHistoryDictFinal[date] += marketValuePriceLookup[date];
-        } else {
-          marketValueHistoryDictFinal[date] = marketValuePriceLookup[date];
-        }
+        marketValueHistoryDictFinal[date] = marketValuePriceLookup[date];
       }
     }
 

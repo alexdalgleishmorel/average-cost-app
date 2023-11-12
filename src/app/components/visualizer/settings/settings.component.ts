@@ -52,7 +52,8 @@ export class SettingsComponent {
       budget: Number(this.budgetFormControl.value),
       currency: this.currencyFormControl.value ? this.currencyFormControl.value : Currency.USD,
       shares: Number(this.sharesFormControl.value),
-      symbol: this.assetSymbol
+      symbol: this.assetSymbol,
+      history: this.assetService.currentAssetSubject.getValue().history
     });
     this.formGroup.markAsPristine();
     this.router.navigate(['/', 'visualizer', this.assetSymbol]);

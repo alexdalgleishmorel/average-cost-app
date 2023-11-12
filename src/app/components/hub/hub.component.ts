@@ -25,23 +25,14 @@ export class HubComponent {
     private router: Router
   ) {
     this.networthInformation = {bookValue: 0, marketValue: 0};
-
     assetService.networthSubject.subscribe(networthInformation => {
       this.networthInformation = networthInformation;
     });
-
-    this.updateNetworth();
   }
 
   ionViewWillEnter() {
     this.assets = this.assetService.getAllAssets();
-  }
-
-  updateNetworth(event?: any) {
     this.assetService.getNetworthInformation();
-    if (event) {
-      event.target.complete();
-    }
   }
 
   assetSelected(asset: AssetInformation) {
@@ -65,5 +56,13 @@ export class HubComponent {
       component: AssetCreationModalComponent
     });
     modal.present();
+  }
+
+  getNetworthChange(): number {
+    return this.networthInformation.marketValue-this.networthInformation.bookValue;
+  }
+
+  formatChangeValue(change: number): string {
+    return `(${currencyFormatter.format(change)})`;
   }
 }
