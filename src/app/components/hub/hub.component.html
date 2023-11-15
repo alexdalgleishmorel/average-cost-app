@@ -1,11 +1,11 @@
 <ion-header class="header-padding">
-  <ion-card class="networth-card" (click)="assetSelected({ symbol: 'NETWORTH' })">
+  <ion-card class="networth-card" (click)="networthSelected()">
       <ion-card-header>
         <div class="even-row">
           <div class="centered">
             <ion-text color="medium"><b>NETWORTH</b></ion-text>
             <div>
-              <ion-text color="primary">{{formatMoneyValue(networthInformation.marketValue)}}</ion-text>
+              <ion-text color="primary">{{formatMoneyValue(networthInformation?.marketValue)}}</ion-text>
               &nbsp;
               <ion-text [color]="getNetworthChange() >= 0 ? 'success' : 'danger'">{{formatChangeValue(getNetworthChange())}}</ion-text>
             </div>

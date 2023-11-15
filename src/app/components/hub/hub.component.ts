@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { AssetInformation, AssetService, NetworthInformation } from 'src/app/services/asset/asset.service';
@@ -17,40 +17,67 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 export class HubComponent {
 
   public assets: AssetInformation[] = [];
-  public networthInformation: NetworthInformation;
+  public networthInformation?: NetworthInformation;
 
   constructor(
     private assetService: AssetService,
     private modalCtrl: ModalController,
     private router: Router
   ) {
-    this.networthInformation = {bookValue: 0, marketValue: 0};
     assetService.networthSubject.subscribe(networthInformation => {
       this.networthInformation = networthInformation;
     });
   }
 
+  /**
+   * Retrieves all assets when the hub is navigated to.
+   */
   ionViewWillEnter() {
     this.assets = this.assetService.getAllAssets();
-    this.assetService.updateNetworthInformation();
   }
 
-  assetSelected(asset: AssetInformation) {
-    if (asset.symbol === 'NETWORTH' && !this.assetService.getAsset('NETWORTH')) {
-      return;
-    }
+  /**
+   * Handles an asset being selected in the hub.
+   * 
+   * @param {AssetInformation} asset The asset that was selected.
+   */
+  public assetSelected(asset: AssetInformation) {
     this.router.navigate([`/visualizer/${asset.symbol}`]);
   }
 
-  removeAsset(asset: AssetInformation) {
+  /**
+   * Handles the networth information section being selected.
+   */
+  public networthSelected() {
+    if (this.networthInformation) {
+      this.router.navigate([`/visualizer/NETWORTH`]);
+    }
+  }
+
+  /**
+   * Removes the given asset.
+   * 
+   * @param {AssetInformation} asset The asset to remove. 
+   */
+  public removeAsset(asset: AssetInformation) {
     this.assetService.removeAsset(asset.symbol);
     this.assets = this.assetService.getAllAssets();
   }
 
-  formatMoneyValue(value: number|undefined) {
+  /**
+   * Takes a number and formats it into a currency format. Undefined values format to '-'.
+   * 
+   * @param {number|undefined} value The value to format.
+   * 
+   * @returns {string} The formatted currency representation.
+   */
+  public formatMoneyValue(value: number|undefined) {
     return !value ? '-' : currencyFormatter.format(value);
   }
 
+  /**
+   * Opens a modal for creating a new asset.
+   */
   async openAssetCreationModal() {
     let modal = await this.modalCtrl.create({
       component: AssetCreationModalComponent
@@ -58,13 +85,24 @@ export class HubComponent {
     modal.present();
   }
 
+  /**
+   * Takes an asset and determines its market value, based on the latest market price and the number of shares owned.
+   * 
+   * @param {AssetInformation} asset The asset information.
+   * 
+   * @returns {number} The market value of the asset.
+   */
   getAssetMarketValue(asset: AssetInformation): number {
-    if (!asset.shares) {
-      return 0;
-    }
-    return asset.shares*(asset.history?.dataPoints[asset.history.dataPoints.length-1].value || 0);
+    return asset.shares ? asset.shares*(asset.history?.dataPoints[asset.history.dataPoints.length-1].value || 0) : 0;
   }
 
+  /**
+   * Takes an asset and determines the difference between the book and market value, based on the number of shares owned.
+   * 
+   * @param {AssetInformation} asset The asset information.
+   * 
+   * @returns {number} The difference between the book and market value.
+   */
   getAssetMarketValueChange(asset: AssetInformation): number {
     if (!asset.shares || !asset.averageCost) {
       return 0;
@@ -73,11 +111,23 @@ export class HubComponent {
     return ((asset.shares * marketPrice) - (asset.shares * asset.averageCost))/(asset.shares * asset.averageCost);
   }
 
+  /**
+   * Determines the difference between the book and market value of the user's networth.
+   * 
+   * @returns {number} The difference between the book and market value of the user networth.
+   */
   getNetworthChange(): number {
-    return (this.networthInformation.marketValue-this.networthInformation.bookValue)/this.networthInformation.bookValue;
+    return this.networthInformation ? (this.networthInformation.marketValue-this.networthInformation.bookValue)/this.networthInformation.bookValue : 0;
   }
 
+  /**
+   * Takes a number value and formats it into a percentage value.
+   * 
+   * @param {number} change A number value representing a change.
+   * 
+   * @returns {string} The formatted change value.
+   */
   formatChangeValue(change: number): string {
-    return `${(change*100).toFixed(2)}%`;
+    return !change ? '' : `${(change*100).toFixed(2)}%`;
   }
 }
