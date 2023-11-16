@@ -1,0 +1,33 @@
+<ion-content [scrollY]="false">
+  <div class="content" *ngIf="validationInProgress() else validationSuccess() ? validKey : invalidKey">
+    <div class="message-container">
+      <h1><ion-text color="primary">Validating API key</ion-text></h1>
+      <div class="spacer"></div>
+      <ion-spinner></ion-spinner>
+    </div>
+  </div>
+</ion-content>
+
+<ng-template #validKey>
+  <div class="content">
+    <div class="message-container">
+      <h1><ion-text color="success">Validation successful.</ion-text></h1>
+      <br/>
+      <ion-text>All application functionality is now available.</ion-text>
+      <div class="spacer"></div>
+      <ion-button color="primary" (click)="exitWithSuccess()">DISMISS</ion-button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #invalidKey>
+  <div class="content">
+    <div class="message-container">
+      <h1><ion-text color="danger">Validation failed.</ion-text></h1>
+      <br/>
+      <ion-text>Please ensure the API key you provided is correct, and that is hasn't reached its daily limit.</ion-text>
+      <div class="spacer"></div>
+      <ion-button color="primary" (click)="exitWithFailure()">DISMISS</ion-button>
+    </div>
+  </div>
+</ng-template>

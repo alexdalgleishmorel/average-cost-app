@@ -18,10 +18,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AssetCreationModalComponent } from './components/asset-creation-modal/asset-creation-modal.component';
 import { AssetFailureModalComponent } from './components/asset-failure-modal/asset-failure-modal.component';
 import { AssetDeleteConfirmationModalComponent } from './components/asset-delete-confirmation-modal/asset-delete-confirmation-modal.component';
+import { ApiKeyValidationModalComponent } from './components/api-key-validation-modal/api-key-validation-modal.component';
 
 @NgModule({
   declarations: [
     AccountComponent,
+    ApiKeyValidationModalComponent,
     AppComponent,
     AssetCreationModalComponent,
     AssetDeleteConfirmationModalComponent,

@@ -1,9 +1,52 @@
 <ion-header class="header-padding">
   <ion-card>
     <ion-card-header>
-      <ion-card-subtitle class="card-title">SETTINGS</ion-card-subtitle>
+      <ion-card-subtitle class="centered">SETTINGS</ion-card-subtitle>
     </ion-card-header>
   </ion-card>
 </ion-header>
+
 <ion-content>
+  <div class="content">
+    <div class="configuration-container">
+      <div class="configuration-input-container">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-subtitle color="primary">DARK MODE</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-text>Toggle this control to enable or disable dark mode for the application.</ion-text>
+            <div class="spacer"></div>
+            <ion-toggle [formControl]="darkModeFormControl"></ion-toggle>
+          </ion-card-content>
+        </ion-card>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-subtitle color="primary">API KEY</ion-card-subtitle>
+          </ion-card-header>
+        
+          <ion-card-content>
+            <ion-text>Sign up for your API key 
+              <a href="https://www.alphavantage.co/support/#api-key" target="_blank">here</a>.
+              <div class="small-spacer"></div>
+              This will allow the app to retrieve current market data.
+            </ion-text>
+            <div class="spacer"></div>
+            <div class="row">
+              <ion-input
+                helperText="Provide your API key here."
+                errorText="Required"
+                placeholder="API KEY"
+                [formControl]="apiKeyFormControl">
+              </ion-input>
+              <div class="spacer"></div>
+              <ion-button color="primary" [disabled]="!isApiKeyFormEnabled()" (click)="saveApiKey()">
+                SAVE
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+  </div>
 </ion-content>

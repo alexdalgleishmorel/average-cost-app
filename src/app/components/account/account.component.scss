@@ -1,8 +1,49 @@
-.button-container {
+.configuration-input-container {
+    display: flex;
+    flex-direction: column;
+
+    @media screen and (min-width: 800px) {
+        flex-direction: row;
+        justify-content: center;
+    }
+}
+
+.configuration-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
     width: 100%;
+}
+
+.centered {
+    text-align: center;
+}
+
+.content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.small-spacer {
+    padding: 5px;
+}
+
+.spacer {
     padding: 10px;
 }
 
-.card-title {
-    text-align: center;
+.title {
+    width: 100%;
 }

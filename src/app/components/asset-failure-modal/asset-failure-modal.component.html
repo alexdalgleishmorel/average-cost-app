@@ -1,13 +1,9 @@
-<ion-content>
+<ion-content [scrollY]="false">
   <div class="content">
     <ion-card class="content">
       <ion-card-header>
-        <ion-card-subtitle *ngIf="isCreationFailure()" color="danger">
-          <ion-text><h3>FAILED TO CREATE <ion-text color="primary"><b>{{asset.symbol}}</b></ion-text></h3></ion-text>
-        </ion-card-subtitle>
-        <ion-card-subtitle *ngIf="isUpdateFailure()" color="warning">
-          <ion-text><h3>Something went wrong updating <ion-text color="primary"><b>{{asset.symbol}}</b></ion-text></h3></ion-text>
-        </ion-card-subtitle>
+        <ion-text *ngIf="isCreationFailure()" color="danger"><h3>Failed to create <ion-text color="primary"><b>{{asset.symbol}}</b></ion-text></h3></ion-text>
+        <ion-text *ngIf="isUpdateFailure()" color="warning"><h3>Something went wrong updating <ion-text color="primary"><b>{{asset.symbol}}</b></ion-text></h3></ion-text>
       </ion-card-header>
     
       <ion-card-content>
@@ -19,12 +15,18 @@
           Is <ion-text color="primary"><b>{{asset.type}}</b></ion-text> the correct asset type?
         </ion-text>
         <ion-text *ngIf="isUpdateFailure()">
-          <ion-text>
-          Fetching the most recent chart data failed.
-          </ion-text>
-          <div class="spacer"></div>
-          For now, your chart data will span up to <ion-text color="primary"><b>{{lastUpdated}}</b></ion-text>
+          <ion-text color="primary">
+            Fetching the most recent chart data failed.
+          </ion-text> 
+          For now, your chart data will span up to
+          <br/>
+          <ion-text color="primary"><b>{{lastUpdated}}</b></ion-text>.
         </ion-text>
+        <div class="spacer"></div>
+          <ion-text>
+            <ion-text color="primary">You may have reached your daily limit on API requests.</ion-text>
+             In that case, try again tomorrow or upgrade to a premium API key.
+          </ion-text>
         <div class="spacer"></div>
         <ion-button color="light" expand="block" (click)="dismiss()">DISMISS</ion-button>
       </ion-card-content>

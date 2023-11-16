@@ -37,8 +37,9 @@ export class AssetService {
    * Creates the asset if it deosn't exist.
    * 
    * @param {AssetInformation} asset The asset information.
+   * @param {boolean} openingAsset A flag denoting whether we're performing this update to open the asset chart.
    */
-  updateAssetInformation(asset: AssetInformation) {
+  updateAssetInformation(asset: AssetInformation, openingAsset: boolean = false) {
     const assetStorageName: string = this.getAssetStorageName(asset.symbol);
 
     // Get the latest price history of the asset
@@ -46,15 +47,20 @@ export class AssetService {
       if (data.dataPoints.length) {
         asset.history = data;
       } else {
-        let modal = await this.modalCtrl.create({
-          component: AssetFailureModalComponent,
-          componentProps: {
-            failureType: !asset.history ? AssetFailureType.CREATION : AssetFailureType.UPDATE,
-            asset: asset,
-            lastUpdated: data.lastUpdated
-          }
-        });
-        modal.present();
+        if (openingAsset) {
+          let modal = await this.modalCtrl.create({
+            component: AssetFailureModalComponent,
+            componentProps: {
+              failureType: !asset.history ? AssetFailureType.CREATION : AssetFailureType.UPDATE,
+              asset: asset,
+              lastUpdated: data.lastUpdated
+            }
+          });
+          modal.present();
+        }
+
+        // Notify app about the update
+        this.lastUpdatedAssetSubject.next(asset);
         return;
       }
       // Update the asset information in storage
@@ -96,7 +102,7 @@ export class AssetService {
     });
 
     // Performs an update on the asset
-    this.updateAssetInformation(asset);
+    this.updateAssetInformation(asset, true);
   }
 
   /**
@@ -190,7 +196,7 @@ export class AssetService {
         if (!data.hasOwnProperty('Time Series (Daily)') && !data.hasOwnProperty('Time Series (Digital Currency Daily)')) {
           return {
             dataPoints: [],
-            lastUpdated: moment().format('YYYY-MM-DD')
+            lastUpdated: asset.history?.lastUpdated || ''
           };
         }
 
@@ -211,7 +217,7 @@ export class AssetService {
       catchError(() => {
         return of({
           dataPoints: [],
-          lastUpdated: moment().format('YYYY-MM-DD')
+          lastUpdated: asset.history?.lastUpdated || ''
         });
       })
     );
@@ -358,6 +364,16 @@ export class AssetService {
     if (storedData) { 
       localStorage.removeItem(assetStorageName); 
     }
+  }
+
+  /**
+   * Looks for the ALPHA_VANTAGE_API_KEY in storage.
+   * 
+   * @returns {string | null} Returns the API key as a string or null.
+   */
+  public getApiKey(): string | null {
+    const storedData = localStorage.getItem('ALPHA_VANTAGE_API_KEY');
+    return storedData ? JSON.parse(storedData) : null;
   }
 }
 
