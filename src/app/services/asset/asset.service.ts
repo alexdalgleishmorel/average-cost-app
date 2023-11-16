@@ -59,10 +59,12 @@ export class AssetService {
           modal.present();
         }
 
-        // Notify app about the update
-        this.lastUpdatedAssetSubject.next(asset);
-        this.assetsUpdated.next(this.assetsUpdated.getValue()+1);
-        return;
+        if (!asset.history?.dataPoints.length) {
+          // Notify app about the update
+          this.lastUpdatedAssetSubject.next(asset);
+          this.assetsUpdated.next(this.assetsUpdated.getValue()+1);
+          return;
+        }
       }
       // Update the asset information in storage
       localStorage.setItem(assetStorageName, JSON.stringify(asset));

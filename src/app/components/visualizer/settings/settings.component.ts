@@ -39,16 +39,35 @@ export class SettingsComponent {
     this.currencies = Object.keys(Currency);
   }
 
+  /**
+   * Initializes the form inputs based on the current asset information
+   */
   ngOnInit() {
     this.assetService.currentAssetSubject.subscribe((asset: AssetInformation) => {
       if (this.isCurrentAssetView(asset)) {
         this.averageCostFormControl.setValue(asset.averageCost ? asset.averageCost : 0);
         this.budgetFormControl.setValue(asset.budget ? asset.budget : 0);
+        this.currencyFormControl.setValue(asset.currency ? asset.currency : Currency.USD);
         this.sharesFormControl.setValue(asset.shares ? asset.shares : 0);
       }
     });
   }
 
+  /**
+   * Handles form value logic when user leaves the page
+   */
+  ionViewWillLeave() {
+    const asset: AssetInformation = this.assetService.currentAssetSubject.getValue();
+    this.averageCostFormControl.setValue(asset.averageCost ? asset.averageCost : 0);
+    this.budgetFormControl.setValue(asset.budget ? asset.budget : 0);
+    this.currencyFormControl.setValue(asset.currency ? asset.currency : Currency.USD);
+    this.sharesFormControl.setValue(asset.shares ? asset.shares : 0);
+    this.formGroup.markAsPristine();
+  }
+
+  /**
+   * Saves the asset configuration values based on the form control values
+   */
   saveConfiguration() {
     this.assetService.updateAssetInformation({
       averageCost: Number(this.averageCostFormControl.value),
@@ -62,6 +81,9 @@ export class SettingsComponent {
     this.router.navigate(['/', 'visualizer', this.assetSymbol]);
   }
 
+  /**
+   * Deletes the asset after confirming with the user
+   */
   async deleteAsset() {
     let modal = await this.modalCtrl.create({
       component: AssetDeleteConfirmationModalComponent
@@ -76,6 +98,13 @@ export class SettingsComponent {
     }
   }
 
+  /**
+   * Determines whether the user is currently trying to view the given asset.
+   * 
+   * @param {AssetInformation} asset The asset information.
+   * 
+   * @returns {boolean} Whether the user is currently trying to view the given asset.
+   */
   isCurrentAssetView(asset: AssetInformation): boolean {
     return asset.symbol === this.assetSymbol;
   }
