@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { AssetService, AssetType, Currency } from 'src/app/services/asset/asset.service';
 
 @Component({
@@ -59,7 +60,7 @@ export class AssetCreationModalComponent {
     }
 
     try {
-      this.assetService.saveNewAsset({
+      this.assetService.updateAssetInformation({
         averageCost: Number(this.averageCostFormControl.value),
         budget: Number(this.budgetFormControl.value),
         currency: this.currencyFormControl.value ? this.currencyFormControl.value : Currency.USD,
@@ -73,11 +74,16 @@ export class AssetCreationModalComponent {
       return;
     }
 
-    this.assetAlreadyExistsError = false;
+    let assetCreationSubscription = this.assetService.lastUpdatedAssetSubject.subscribe(asset => {
+      if (asset.symbol === this.symbolFormControl.value) {
+        assetCreationSubscription.unsubscribe();
+        this.router.navigate(['/', 'visualizer', this.symbolFormControl.value]);
+        this.modalCtrl.dismiss();
+      }
+    });
 
+    this.assetAlreadyExistsError = false;
     this.formGroup.markAsPristine();
-    this.router.navigate(['/', 'visualizer', this.symbolFormControl.value]);
-    this.modalCtrl.dismiss();
   }
 
   onAssetTypeChange(event: any) {

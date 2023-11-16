@@ -5,7 +5,7 @@
           <div class="centered">
             <ion-text color="medium"><b>NETWORTH</b></ion-text>
             <div>
-              <ion-text color="primary">{{formatMoneyValue(networthInformation?.marketValue)}}</ion-text>
+              <ion-text color="primary">{{formatMoneyValue(networthMetaData?.marketValue)}}</ion-text>
               &nbsp;
               <ion-text [color]="getNetworthChange() >= 0 ? 'success' : 'danger'">{{formatChangeValue(getNetworthChange())}}</ion-text>
             </div>
@@ -16,33 +16,36 @@
 </ion-header>
 
 <ion-content>
-  <div class="list" *ngFor="let asset of assets">
-    <ion-item-sliding>
-      <div class="row">
-        <ion-item class="item" (click)="assetSelected(asset)">
-          <ion-label class="center-label">
-            <div class="label-content">
-              <ion-text color="primary"><h1><b>{{asset.symbol}}</b></h1></ion-text>
-              <div class="spacer"></div>
-              <div class="sections">
-                <div class="content">
-                  <ion-text color="medium"><b>MARKET VALUE</b></ion-text>
-                  <div>
-                    <ion-text color="primary">{{formatMoneyValue(getAssetMarketValue(asset))}}</ion-text>
-                    &nbsp;
-                    <ion-text [color]="getNetworthChange() >= 0 ? 'success' : 'danger'">{{formatChangeValue(getAssetMarketValueChange(asset))}}</ion-text>
+  <div class="list" *ngIf="assets.length else noAssets">
+    <div *ngFor="let asset of assets">
+      <ion-item-sliding>
+        <div class="row">
+          <ion-item class="item" (click)="assetSelected(asset)">
+            <ion-label class="center-label">
+              <div class="label-content">
+                <ion-text color="primary"><h1><b>{{asset.symbol}}</b></h1></ion-text>
+                <div class="spacer"></div>
+                <div class="sections">
+                  <div class="content">
+                    <ion-text color="medium"><b>MARKET VALUE</b></ion-text>
+                    <div>
+                      <ion-text color="primary">{{formatMoneyValue(getAssetMarketValue(asset))}}</ion-text>
+                      &nbsp;
+                      <ion-text [color]="getNetworthChange() >= 0 ? 'success' : 'danger'">{{formatChangeValue(getAssetMarketValueChange(asset))}}</ion-text>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </ion-label>
-        </ion-item>
-        <div class="small-spacer"></div>
-        <ion-item-options>
-          <ion-item-option color="danger" class="asset-delete-button" (click)="removeAsset(asset)">Delete</ion-item-option>
-        </ion-item-options>
-      </div>
-    </ion-item-sliding>
+            </ion-label>
+          </ion-item>
+          <div class="small-spacer"></div>
+          <ion-item-options>
+            <ion-item-option color="danger" class="asset-delete-button" (click)="removeAsset(asset)">Delete</ion-item-option>
+          </ion-item-options>
+        </div>
+      </ion-item-sliding>
+      <div class="spacer"></div>
+    </div>
   </div>
 </ion-content>
 

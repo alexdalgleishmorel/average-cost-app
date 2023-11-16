@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { AssetInformation, AssetService, NetworthInformation } from 'src/app/services/asset/asset.service';
+import { AssetInformation, AssetService, NetworthMetaData } from 'src/app/services/asset/asset.service';
 import { AssetCreationModalComponent } from '../asset-creation-modal/asset-creation-modal.component';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
@@ -17,15 +17,15 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 export class HubComponent {
 
   public assets: AssetInformation[] = [];
-  public networthInformation?: NetworthInformation;
+  public networthMetaData?: NetworthMetaData;
 
   constructor(
     private assetService: AssetService,
     private modalCtrl: ModalController,
     private router: Router
   ) {
-    assetService.networthSubject.subscribe(networthInformation => {
-      this.networthInformation = networthInformation;
+    assetService.networthMetaDataSubject.subscribe(networthMetaData => {
+      this.networthMetaData = networthMetaData;
     });
   }
 
@@ -49,7 +49,7 @@ export class HubComponent {
    * Handles the networth information section being selected.
    */
   public networthSelected() {
-    if (this.networthInformation) {
+    if (this.networthMetaData) {
       this.router.navigate([`/visualizer/NETWORTH`]);
     }
   }
@@ -71,7 +71,7 @@ export class HubComponent {
    * 
    * @returns {string} The formatted currency representation.
    */
-  public formatMoneyValue(value: number|undefined) {
+  public formatMoneyValue(value: number|undefined): string {
     return !value ? '-' : currencyFormatter.format(value);
   }
 
@@ -117,7 +117,7 @@ export class HubComponent {
    * @returns {number} The difference between the book and market value of the user networth.
    */
   getNetworthChange(): number {
-    return this.networthInformation ? (this.networthInformation.marketValue-this.networthInformation.bookValue)/this.networthInformation.bookValue : 0;
+    return this.networthMetaData ? (this.networthMetaData.marketValue-this.networthMetaData.bookValue)/this.networthMetaData.bookValue : 0;
   }
 
   /**

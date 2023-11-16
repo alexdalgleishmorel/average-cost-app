@@ -5,8 +5,8 @@
         <ion-card-subtitle *ngIf="isCreationFailure()" color="danger">
           <ion-text><h3>FAILED TO CREATE <ion-text color="primary"><b>{{asset.symbol}}</b></ion-text></h3></ion-text>
         </ion-card-subtitle>
-        <ion-card-subtitle *ngIf="isUpdateFailure()" color="danger">
-          <ion-text><h3>FAILED TO UPDATE <ion-text color="primary"><b>{{asset.symbol}}</b></ion-text></h3></ion-text>
+        <ion-card-subtitle *ngIf="isUpdateFailure()" color="warning">
+          <ion-text><h3>Something went wrong updating <ion-text color="primary"><b>{{asset.symbol}}</b></ion-text></h3></ion-text>
         </ion-card-subtitle>
       </ion-card-header>
     
@@ -23,7 +23,7 @@
           Fetching the most recent chart data failed.
           </ion-text>
           <div class="spacer"></div>
-          For now your chart data will span up to <ion-text color="primary"><b>{{lastUpdated}}</b></ion-text>
+          For now, your chart data will span up to <ion-text color="primary"><b>{{lastUpdated}}</b></ion-text>
         </ion-text>
         <div class="spacer"></div>
         <ion-button color="light" expand="block" (click)="dismiss()">DISMISS</ion-button>
