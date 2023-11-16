@@ -61,6 +61,7 @@ export class AssetService {
 
         // Notify app about the update
         this.lastUpdatedAssetSubject.next(asset);
+        this.assetsUpdated.next(this.assetsUpdated.getValue()+1);
         return;
       }
       // Update the asset information in storage
@@ -234,9 +235,11 @@ export class AssetService {
 
     if (!storedData || JSON.parse(storedData).history.lastUpdated !== moment().format('YYYY-MM-DD')) {
       this.getAssetPriceData(asset).subscribe((data: ChartData) => {
-        asset.history = data;
-        this.saveNonUserAsset(asset);
-        this.computeNetworth(asset.history.dataPoints.length ? asset.history.dataPoints : []);
+        if (data.dataPoints.length) {
+          asset.history = data;
+          this.saveNonUserAsset(asset);
+        }
+        this.computeNetworth(asset.history?.dataPoints.length ? asset.history.dataPoints : []);
       });
     } else {
       const asset: AssetInformation = JSON.parse(storedData);
