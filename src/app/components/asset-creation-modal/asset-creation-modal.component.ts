@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { Subscription } from 'rxjs';
 import { AssetService, AssetType, Currency } from 'src/app/services/asset/asset.service';
 
 @Component({
@@ -41,6 +40,9 @@ export class AssetCreationModalComponent {
     this.currencies = Object.keys(Currency);
   }
 
+  /**
+   * Intializes additional form control logic.
+   */
   ngOnInit() {
     this.symbolFormControl.valueChanges.subscribe(value => {
       this.assetAlreadyExistsError = false;
@@ -50,10 +52,16 @@ export class AssetCreationModalComponent {
     });
   }
 
+  /**
+   * Dismisses the modal.
+   */
   cancel() {
     this.modalCtrl.dismiss();
   }
 
+  /**
+   * Creates the asset based on the form control values.
+   */
   create() {
     if (!this.symbolFormControl.value) {
       return;
@@ -86,14 +94,29 @@ export class AssetCreationModalComponent {
     this.formGroup.markAsPristine();
   }
 
+  /**
+   * Handles when the user toggles between different asset types (i.e. STOCK, CRYPTO)
+   * 
+   * @param event The change event
+   */
   onAssetTypeChange(event: any) {
     this.assetType = event.detail.value;
   }
 
+  /**
+   * Returns the STOCK asset type
+   * 
+   * @returns {AssetType} STOCK asset type
+   */
   getStockAssetType(): AssetType {
     return AssetType.STOCK;
   }
 
+  /**
+   * Returns the CRYPTO asset type
+   * 
+   * @returns {AssetType} CRYPTO asset type
+   */
   getCryptoAssetType(): AssetType {
     return AssetType.CRYPTO;
   }
