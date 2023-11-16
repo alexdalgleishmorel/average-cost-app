@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AssetService } from 'src/app/services/asset/asset.service';
 
@@ -7,29 +7,34 @@ import { AssetService } from 'src/app/services/asset/asset.service';
   templateUrl: './visualizer.component.html',
   styleUrls: ['./visualizer.component.scss'],
 })
-export class VisualizerComponent  implements OnInit {
+export class VisualizerComponent {
 
   private symbol: string;
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private assetService: AssetService
-  ) {
-    const symbol = this.activatedRoute.snapshot.paramMap.get('symbol');
-    this.symbol = symbol ? symbol : '';
+  constructor(private activatedRoute: ActivatedRoute, private assetService: AssetService) {
+    this.symbol = this.activatedRoute.snapshot.paramMap.get('symbol') || '';
   }
 
-  ngOnInit() {}
-
+  /**
+   * Determines whether the current visualizer view is the user networth history.
+   * 
+   * @returns {boolean} Whether the current view is the networth history view.
+   */
   isNetworthView(): boolean {
     return this.symbol === 'NETWORTH';
   }
 
+  /**
+   * Handles logic before leaving the visualizer page.
+   */
   ionViewWillLeave() {
     this.assetService.switchAssets('');
     this.assetService.chartViewActive = false;
   }
 
+  /**
+   * Handles logic before the user enters the visualizer page.
+   */
   ionViewWillEnter() {
     this.assetService.switchAssets(this.symbol);
   }
