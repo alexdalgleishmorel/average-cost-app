@@ -130,4 +130,20 @@ export class HubComponent {
   formatChangeValue(change: number): string {
     return !change ? '' : `${(change*100).toFixed(2)}%`;
   }
+
+  /**
+   * Determines whether the api key is currently configured for the application
+   * 
+   * @returns {boolean} Whether the api key is configured
+   */
+  apiKeyConfigured(): boolean {
+    return !!this.assetService.getApiKey();
+  }
+
+  /**
+   * Navigates the user to the main settings page
+   */
+  navigateToSettings() {
+    this.router.navigate(['', 'settings']);
+  }
 }

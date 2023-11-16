@@ -16,7 +16,7 @@
 </ion-header>
 
 <ion-content>
-  <div class="list" *ngIf="assets.length else noAssets">
+  <div class="list" *ngIf="assets.length && apiKeyConfigured() else noAssets">
     <div *ngFor="let asset of assets">
       <ion-item-sliding>
         <div class="row">
@@ -56,11 +56,21 @@
 </ion-footer>
 
 <ng-template #noAssets>
-  <div class="content">
+  <div *ngIf="apiKeyConfigured() else noApiKey" class="content">
     <ion-fab>
       <ion-fab-button (click)="openAssetCreationModal()">
         <ion-icon name="add"></ion-icon>
       </ion-fab-button>
     </ion-fab>
+  </div>
+</ng-template>
+
+<ng-template #noApiKey>
+  <div class="content">
+    <div class="centered">
+      <ion-text color="primary"><b>Before you can get started, some brief setup is required.</b></ion-text>
+      <div class="spacer"></div>
+      <ion-text>Configure your API key in <a class="emphasis" (click)="navigateToSettings()">settings</a>.</ion-text>
+    </div>
   </div>
 </ng-template>

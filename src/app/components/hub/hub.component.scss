@@ -27,6 +27,14 @@
     padding: 10px;
 }
 
+.emphasis {
+    text-decoration: underline;
+}
+
+.emphasis:hover {
+    cursor: pointer;
+}
+
 .row {
     display: flex;
     flex-direction: row;
