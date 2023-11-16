@@ -12,10 +12,16 @@ export class AssetDeleteConfirmationModalComponent implements OnInit {
 
   ngOnInit() {}
 
+  /**
+   * Closes the modal with a negative confirmation
+   */
   cancel() {
     this.modalCtrl.dismiss(false);
   }
 
+  /**
+   * Closes the modal with a positive confirmation
+   */
   confirm() {
     this.modalCtrl.dismiss(true);
   }
