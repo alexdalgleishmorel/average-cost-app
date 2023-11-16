@@ -34,7 +34,7 @@ export class AssetService {
   /**
    * Updates an asset's information with the provided data. 
    * Retrieves the latest price information before saving.
-   * Creates the asset if it deosn't exist.
+   * Creates the asset if it doesn't exist.
    * 
    * @param {AssetInformation} asset The asset information.
    * @param {boolean} openingAsset A flag denoting whether we're performing this update to open the asset chart.
@@ -102,8 +102,12 @@ export class AssetService {
       }
     });
 
-    // Performs an update on the asset
-    this.updateAssetInformation(asset, true);
+    if (assetSymbol !== 'NETWORTH') {
+      this.updateAssetInformation(asset, true);
+    } else {
+      this.updateNetworthInformation();
+      this.lastUpdatedAssetSubject.next(asset);
+    }
   }
 
   /**
