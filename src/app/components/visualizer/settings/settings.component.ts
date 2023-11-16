@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
 import { AssetInformation, AssetService, Currency } from 'src/app/services/asset/asset.service';
+import { AssetDeleteConfirmationModalComponent } from '../../asset-delete-confirmation-modal/asset-delete-confirmation-modal.component';
 
 @Component({
   selector: 'app-settings',
@@ -30,6 +32,7 @@ export class SettingsComponent {
     private _formBuilder: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private assetService: AssetService,
+    private modalCtrl: ModalController,
     private router: Router
   ) {
     this.assetSymbol = this.activatedRoute.snapshot.parent?.paramMap.get('symbol')!;
@@ -57,6 +60,20 @@ export class SettingsComponent {
     });
     this.formGroup.markAsPristine();
     this.router.navigate(['/', 'visualizer', this.assetSymbol]);
+  }
+
+  async deleteAsset() {
+    let modal = await this.modalCtrl.create({
+      component: AssetDeleteConfirmationModalComponent
+    });
+    modal.present();
+
+    const confirmation = (await modal.onWillDismiss()).data;
+
+    if (confirmation) {
+      this.assetService.removeAsset(this.assetSymbol);
+      this.router.navigate(['/', 'hub']);
+    }
   }
 
   isCurrentAssetView(asset: AssetInformation): boolean {

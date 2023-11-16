@@ -67,8 +67,11 @@
           </ion-card-content>
         </ion-card>
       </div>
-      <ion-button color="primary" expand="block" [disabled]="!formGroup.valid || formGroup.pristine" (click)="saveConfiguration()">
+      <ion-button color="primary" [disabled]="!formGroup.valid || formGroup.pristine" (click)="saveConfiguration()">
         SAVE
+      </ion-button>
+      <ion-button color="danger" (click)="deleteAsset()">
+        REMOVE
       </ion-button>
     </div>
   </div>

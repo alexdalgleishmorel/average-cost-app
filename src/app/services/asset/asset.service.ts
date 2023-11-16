@@ -4,7 +4,6 @@ import { BehaviorSubject, Observable, Subject, catchError, map, of } from 'rxjs'
 import * as moment from 'moment';
 
 import { ALPHA_VANTAGE_API_KEY, ALPHA_VANTAGE_API_URL, CRYPTO_FUNCTION_TYPE, STOCK_FUNCTION_TYPE, STORAGE_PREFIX } from 'src/constants';
-import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { AssetFailureModalComponent, AssetFailureType } from 'src/app/components/asset-failure-modal/asset-failure-modal.component';
 
