@@ -25,6 +25,9 @@ export class ChartComponent implements OnInit {
   public networthBookValue: number = 0;
   public networthMarketValue: number = 0;
 
+  /**
+   * Handles drawing the green average cost line overlayed over the asset chart data
+   */
   averageCostPlugin = {
     id: 'average-cost-plugin',
     afterDraw: (chart: any) => {
@@ -54,6 +57,9 @@ export class ChartComponent implements OnInit {
     this.assetInformation = { symbol: this.activatedRoute.snapshot.parent?.paramMap.get('symbol')! };
   }
 
+  /**
+   * Handles chart intialization. Contains logic that ensures only one chart view exists at a time within the application.
+   */
   ngOnInit() {
     this.assetService.currentAssetSubject.subscribe((asset: AssetInformation) => {
 
@@ -88,6 +94,11 @@ export class ChartComponent implements OnInit {
     });
   }
 
+  /**
+   * Creates the chart based on the provided chart data.
+   * 
+   * @param {ChartDataPoint[]} data The chart data to display 
+   */
   createChart(data: ChartDataPoint[]) {
     if (this.lineChart) {
       return;
@@ -138,10 +149,19 @@ export class ChartComponent implements OnInit {
     }
   }
 
+  /**
+   * Updates the current chart representation.
+   */
   updateChart() {
     this.lineChart.update();
   }
 
+  /**
+   * Determines what the user's new average cost would be on the asset, based on the percentage of budget spent provided in the event
+   * 
+   * @param event Event containing the slider value, representing the percentage of budget spent
+   * @returns 
+   */
   updateAverageCost(event: any) {
     if (!this.assetInformation.budget || !this.assetInformation.shares) {
       return;
@@ -163,19 +183,45 @@ export class ChartComponent implements OnInit {
     this.lineChart ? this.updateChart() : this.assetService.currentAssetSubject.next(this.assetInformation);
   }
 
-  hasRequiredConfigurations() {
+  /**
+   * Determines whether the current assetInformation values has all required attributes to perform average cost calculations
+   * 
+   * @returns {boolean} Whether the current assetInformation has all required values
+   */
+  hasRequiredConfigurations():boolean {
     return !!this.assetInformation.averageCost && !!this.assetInformation.budget && !!this.assetInformation.shares && !!this.assetInformation.symbol;
   }
 
+  /**
+   * Determines whether the user is currently trying to view the given asset.
+   * 
+   * @param {AssetInformation} asset The asset information.
+   * 
+   * @returns {boolean} Whether the user is currently trying to view the given asset.
+   */
   isCurrentAssetView(asset: AssetInformation): boolean {
     return asset.symbol === this.assetInformation.symbol;
   }
 
+  /**
+   * Adds a % character to the number value on the slider pin.
+   * 
+   * @param {number} value A number value.
+   *  
+   * @returns {string} The number value with a % appended.
+   */
   pinFormatter(value: number): string {
     return `${value}%`;
   }
 
-  formatCurrency(value: number) {
+  /**
+   * Formats a number value into a currency string representation.
+   * 
+   * @param {number} value The currency value.
+   *  
+   * @returns {string} A string representation of the currency value.
+   */
+  formatCurrency(value: number): string {
     return value ? currencyFormatter.format(value): '-';
   }
 }
