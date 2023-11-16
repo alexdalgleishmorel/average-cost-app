@@ -40,7 +40,7 @@
                 [formControl]="apiKeyFormControl">
               </ion-input>
               <div class="spacer"></div>
-              <ion-button color="primary" [disabled]="!isApiKeyFormEnabled()" (click)="saveApiKey()">
+              <ion-button color="primary" [disabled]="!canSaveApiKey()" (click)="saveApiKey()">
                 SAVE
               </ion-button>
             </div>

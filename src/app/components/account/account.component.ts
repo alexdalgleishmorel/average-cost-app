@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 
@@ -11,22 +11,32 @@ import { toggleDarkTheme } from 'src/app/app.component';
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss'],
 })
-export class AccountComponent implements OnInit {
-  public apiKeyFormControl = new FormControl('');
+export class AccountComponent {
+  public apiKeyFormControl;
   public darkModeFormControl;
 
   constructor(private assetService: AssetService, private modalCtrl: ModalController) {
+    // Sets up dark theme toggle logic
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     this.darkModeFormControl = new FormControl(prefersDark);
     this.darkModeFormControl.valueChanges.subscribe(prefersDark => {
       toggleDarkTheme(!!prefersDark);
     });
+    // Sets up api key input form control
+    this.apiKeyFormControl = new FormControl(this.assetService.getApiKey());
   }
 
-  ngOnInit() {
+  /**
+   * Handles when the user leaves the settings page.
+   */
+  ionViewWillLeave() {
     this.apiKeyFormControl.setValue(this.assetService.getApiKey());
+    this.apiKeyFormControl.markAsPristine();
   }
 
+  /**
+   * Handles the user saving an API key. Opens a modal which confirms key validity, saves the key to storage if it was valid.
+   */
   async saveApiKey() {
     const apiKeyValue = this.apiKeyFormControl.getRawValue();
     this.apiKeyFormControl.setValue('');
@@ -47,7 +57,12 @@ export class AccountComponent implements OnInit {
     }
   }
 
-  isApiKeyFormEnabled(): boolean {
+  /**
+   * Determines whether the api key input can be saved at the given moment.
+   * 
+   * @returns {boolean} Whether the API key input can be saved.
+   */
+  canSaveApiKey(): boolean {
     return this.apiKeyFormControl.dirty && !!this.apiKeyFormControl.getRawValue();
   }
 }
