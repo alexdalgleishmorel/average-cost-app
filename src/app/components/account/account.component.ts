@@ -43,6 +43,7 @@ export class AccountComponent implements OnInit {
 
     if (validKeyConfirmation) {
       localStorage.setItem('ALPHA_VANTAGE_API_KEY', apiKeyValue!);
+      this.apiKeyFormControl.markAsPristine();
     }
   }
 

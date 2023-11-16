@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, Subject, catchError, map, of } from 'rxjs';
 import * as moment from 'moment';
 
-import { ALPHA_VANTAGE_API_KEY, ALPHA_VANTAGE_API_URL, CRYPTO_FUNCTION_TYPE, STOCK_FUNCTION_TYPE, STORAGE_PREFIX } from 'src/constants';
+import { ALPHA_VANTAGE_API_URL, CRYPTO_FUNCTION_TYPE, STOCK_FUNCTION_TYPE, STORAGE_PREFIX } from 'src/constants';
 import { ModalController } from '@ionic/angular';
 import { AssetFailureModalComponent, AssetFailureType } from 'src/app/components/asset-failure-modal/asset-failure-modal.component';
 
@@ -190,10 +190,17 @@ export class AssetService {
    * @returns {Observable<CharData>} An observable containing the ChartData.
    */
   private getAssetPriceData(asset: AssetInformation): Observable<ChartData> {
-    let url = `${ALPHA_VANTAGE_API_URL}?function=${STOCK_FUNCTION_TYPE}&symbol=${asset.symbol}&outputsize=full&apikey=${ALPHA_VANTAGE_API_KEY}`;
+    if (!this.getApiKey()) {
+      return of({
+        dataPoints: [],
+        lastUpdated: asset.history?.lastUpdated || ''
+      });
+    }
+
+    let url = `${ALPHA_VANTAGE_API_URL}?function=${STOCK_FUNCTION_TYPE}&symbol=${asset.symbol}&outputsize=full&apikey=${this.getApiKey()}`;
 
     if (asset.type === AssetType.CRYPTO) {
-      url = `${ALPHA_VANTAGE_API_URL}?function=${CRYPTO_FUNCTION_TYPE}&symbol=${asset.symbol}&market=USD&outputsize=full&apikey=${ALPHA_VANTAGE_API_KEY}`;
+      url = `${ALPHA_VANTAGE_API_URL}?function=${CRYPTO_FUNCTION_TYPE}&symbol=${asset.symbol}&market=USD&outputsize=full&apikey=${this.getApiKey()}`;
     }
 
     return this.http.get(url).pipe(
@@ -376,11 +383,10 @@ export class AssetService {
   /**
    * Looks for the ALPHA_VANTAGE_API_KEY in storage.
    * 
-   * @returns {string | null} Returns the API key as a string or null.
+   * @returns {string} Returns the API key as a string.
    */
-  public getApiKey(): string | null {
-    const storedData = localStorage.getItem('ALPHA_VANTAGE_API_KEY');
-    return storedData ? JSON.parse(storedData) : null;
+  public getApiKey(): string {
+    return localStorage.getItem('ALPHA_VANTAGE_API_KEY') || '';
   }
 }
 
