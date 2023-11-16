@@ -1,4 +1,4 @@
-<ion-header class="header-padding">
+<ion-header *ngIf="apiKeyConfigured()" class="header-padding">
   <ion-card class="networth-card" (click)="networthSelected()">
       <ion-card-header>
         <div class="even-row">
@@ -49,7 +49,7 @@
   </div>
 </ion-content>
 
-<ion-footer *ngIf="assets.length">
+<ion-footer *ngIf="assets.length && apiKeyConfigured()">
   <div class="button-container">
     <ion-button color="primary" expand="block" (click)="openAssetCreationModal()">ADD NEW ASSET</ion-button>
   </div>
@@ -68,9 +68,9 @@
 <ng-template #noApiKey>
   <div class="content">
     <div class="centered">
-      <ion-text color="primary"><b>Before you can get started, some brief setup is required.</b></ion-text>
+      <ion-text color="primary"><b>Before you can get started, you need an API key.</b></ion-text>
       <div class="spacer"></div>
-      <ion-text>Configure your API key in <a class="emphasis" (click)="navigateToSettings()">settings</a>.</ion-text>
+      <ion-text>Setup your API key in <a class="emphasis" (click)="navigateToSettings()">settings</a>.</ion-text>
     </div>
   </div>
 </ng-template>
