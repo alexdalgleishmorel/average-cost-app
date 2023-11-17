@@ -4,11 +4,11 @@
       <ion-card-header>
         <div class="card-content">
           <div class="card-title">
-            <ion-card-subtitle>AVERAGE COST</ion-card-subtitle>
+            <ion-card-subtitle><b>AVERAGE COST</b><br/>({{getAssetCurrency()}})</ion-card-subtitle>
             <ion-card-title color="primary">{{formatCurrency(calculatedAverageCost)}}</ion-card-title>
           </div>
           <div class="card-title">
-            <ion-card-subtitle>BUDGET REQUIRED</ion-card-subtitle>
+            <ion-card-subtitle><b>BUDGET REQUIRED</b><br/>({{getAssetCurrency()}})</ion-card-subtitle>
             <ion-card-title color="success">{{formatCurrency(calculatedBudget)}}</ion-card-title>
           </div>
         </div>

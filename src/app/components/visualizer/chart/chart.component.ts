@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import Chart from 'chart.js/auto';
-import { AssetInformation, AssetService, ChartDataPoint } from 'src/app/services/asset/asset.service';
+import { AssetInformation, AssetService, ChartDataPoint, Currency } from 'src/app/services/asset/asset.service';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -244,5 +244,14 @@ export class ChartComponent implements OnInit {
    */
   formatCurrency(value: number): string {
     return value ? currencyFormatter.format(value): '-';
+  }
+
+  /**
+   * Gets the currency of the current asset being viewed.
+   * 
+   * @returns {string} The currency of the current asset being viewed.
+   */
+  getAssetCurrency(): Currency {
+    return this.assetService.getAsset(this.assetInformation.symbol).currency || Currency.USD;
   }
 }
