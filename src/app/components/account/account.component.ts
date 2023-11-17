@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 
-import { AssetService } from 'src/app/services/asset/asset.service';
+import { AssetService } from '../../services/asset/asset.service';
 import { ApiKeyValidationModalComponent } from '../api-key-validation-modal/api-key-validation-modal.component';
-import { toggleDarkTheme } from 'src/app/app.component';
+import { toggleDarkTheme } from '../../app.component';
 
 @Component({
   selector: 'app-account',

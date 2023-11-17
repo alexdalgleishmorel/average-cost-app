@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import Chart from 'chart.js/auto';
-import { AssetInformation, AssetService, ChartDataPoint, Currency } from 'src/app/services/asset/asset.service';
+import { AssetInformation, AssetService, ChartDataPoint, Currency } from '../../../services/asset/asset.service';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',

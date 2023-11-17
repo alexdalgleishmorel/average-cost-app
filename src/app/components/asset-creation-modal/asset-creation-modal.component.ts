@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { AssetService, AssetType, Currency } from 'src/app/services/asset/asset.service';
+import { AssetService, AssetType, Currency } from '../../services/asset/asset.service';
 
 @Component({
   selector: 'app-asset-creation-modal',

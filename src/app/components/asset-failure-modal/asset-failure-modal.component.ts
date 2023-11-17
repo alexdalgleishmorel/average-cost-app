@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { AssetInformation } from 'src/app/services/asset/asset.service';
+import { AssetInformation } from '../../services/asset/asset.service';
 
 @Component({
   selector: 'app-asset-failure-modal',

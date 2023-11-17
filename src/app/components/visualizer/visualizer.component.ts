@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AssetService } from 'src/app/services/asset/asset.service';
+import { AssetService } from '../../services/asset/asset.service';
 
 @Component({
   selector: 'app-visualizer',

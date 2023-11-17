@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { ALPHA_VANTAGE_API_URL, STOCK_FUNCTION_TYPE } from 'src/constants';
+import { ALPHA_VANTAGE_API_URL, STOCK_FUNCTION_TYPE } from '../../../constants';
 
 @Component({
   selector: 'app-api-key-validation-modal',

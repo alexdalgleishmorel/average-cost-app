@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { AssetInformation, AssetService, Currency } from 'src/app/services/asset/asset.service';
+import { AssetInformation, AssetService, Currency } from '../../../services/asset/asset.service';
 import { AssetDeleteConfirmationModalComponent } from '../../asset-delete-confirmation-modal/asset-delete-confirmation-modal.component';
 
 @Component({
