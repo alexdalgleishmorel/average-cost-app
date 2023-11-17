@@ -16,7 +16,7 @@
     </ion-card>
     <div class="chart-container"><canvas id="lineChart"></canvas></div>
     <div class="footer-content">
-      <ion-range [pin]="true" [pinFormatter]="pinFormatter" (ionInput)="updateAverageCost($event)"></ion-range>
+      <ion-range [pin]="true" [pinFormatter]="pinFormatter" (ionInput)="onSliderChange($event)" [formControl]="budgetSpentFormControl"></ion-range>
       <ion-card-subtitle color="primary" class="slider-label">% BUDGET SPENT</ion-card-subtitle>
     </div>
   </div>

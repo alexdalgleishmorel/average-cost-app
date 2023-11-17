@@ -40,7 +40,9 @@
           </ion-item>
           <div class="small-spacer"></div>
           <ion-item-options>
-            <ion-item-option color="danger" class="asset-delete-button" (click)="removeAsset(asset)">Delete</ion-item-option>
+            <ion-item-option color="primary" class="asset-slider-button" (click)="updateAsset(asset)">Update</ion-item-option>
+            <div class="tiny-spacer"></div>
+            <ion-item-option color="danger" class="asset-slider-button" (click)="removeAsset(asset)">Delete</ion-item-option>
           </ion-item-options>
         </div>
       </ion-item-sliding>

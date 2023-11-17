@@ -1,4 +1,4 @@
-.asset-delete-button {
+.asset-slider-button {
     border-radius: 10px;
 }
 
@@ -53,6 +53,10 @@
     width: 100%;
 }
 
+.item:hover  {
+    border: 3px solid grey;
+}
+
 .label-content {
     width: 100%;
     display: flex;
@@ -89,6 +93,10 @@
     padding: 5px;
 }
 
+.tiny-spacer {
+    padding: 1px;
+}
+
 .content {
     width: 100%;
     height: 100%;
@@ -104,6 +112,8 @@
 
 .networth-card:hover {
     cursor: pointer;
+    border-radius: 10px;
+    border: 3px solid grey;
 }
 
 .item:hover {

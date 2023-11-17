@@ -65,6 +65,15 @@ export class HubComponent {
   }
 
   /**
+   * Opens the configuration page for the given asset.
+   * 
+   * @param {AssetInformation} asset The asset information. 
+   */
+  public updateAsset(asset: AssetInformation) {
+    this.router.navigate([`/visualizer/${asset.symbol}/configuration`]);
+  }
+
+  /**
    * Takes a number and formats it into a currency format. Undefined values format to '-'.
    * 
    * @param {number|undefined} value The value to format.

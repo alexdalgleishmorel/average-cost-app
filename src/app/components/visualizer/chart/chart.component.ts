@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import Chart from 'chart.js/auto';
 import { AssetInformation, AssetService, ChartDataPoint } from 'src/app/services/asset/asset.service';
@@ -24,6 +25,8 @@ export class ChartComponent implements OnInit {
 
   public networthBookValue: number = 0;
   public networthMarketValue: number = 0;
+
+  public budgetSpentFormControl: FormControl = new FormControl(0);
 
   /**
    * Handles drawing the green average cost line overlayed over the asset chart data
@@ -55,6 +58,9 @@ export class ChartComponent implements OnInit {
     private assetService: AssetService
   ) {
     this.assetInformation = { symbol: this.activatedRoute.snapshot.parent?.paramMap.get('symbol')! };
+    this.budgetSpentFormControl.valueChanges.subscribe(value => {
+      this.updateAverageCost(value/100);
+    });
   }
 
   /**
@@ -92,6 +98,22 @@ export class ChartComponent implements OnInit {
       }
 
     });
+  }
+
+  /**
+   * Updates the average cost value on ion slider change events
+   * 
+   * @param event The ion slider change event
+   */
+  onSliderChange(event: any) {
+    this.updateAverageCost(event.detail.value/100);
+  }
+
+  /**
+   * Handles logic for when the user leaves the chart view
+   */
+  ionViewWillLeave() {
+    this.budgetSpentFormControl.setValue(0);
   }
 
   /**
@@ -159,14 +181,13 @@ export class ChartComponent implements OnInit {
   /**
    * Determines what the user's new average cost would be on the asset, based on the percentage of budget spent provided in the event
    * 
-   * @param event Event containing the slider value, representing the percentage of budget spent
+   * @param {number} budget The percentage of the budget spent.
    * @returns 
    */
-  updateAverageCost(event: any) {
+  updateAverageCost(percentBudgetSpent: number) {
     if (!this.assetInformation.budget || !this.assetInformation.shares) {
       return;
     }
-    const percentBudgetSpent = (event.detail.value/100);
     this.calculatedBudget = percentBudgetSpent*this.assetInformation.budget;
 
     const assetPriceHistory = this.lineChart ? this.lineChart.data.datasets[0].data : this.assetService.chartValueData;
