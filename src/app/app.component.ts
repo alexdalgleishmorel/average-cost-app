@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
+  host: {'average-cost': 'true'},
 })
 export class AppComponent {
   constructor() {
