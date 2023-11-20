@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { AssetInformation, AssetService, Currency } from '../../../services/asset/asset.service';
 import { AssetDeleteConfirmationModalComponent } from '../../asset-delete-confirmation-modal/asset-delete-confirmation-modal.component';
-import { RouterService } from 'src/app/services/router/router.service';
+import { RouterService } from '../../../services/router/router.service';
 
 @Component({
   selector: 'app-settings',

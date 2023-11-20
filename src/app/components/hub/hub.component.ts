@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { AssetInformation, AssetService, NetworthMetaData } from '../../services/asset/asset.service';
 import { AssetCreationModalComponent } from '../asset-creation-modal/asset-creation-modal.component';
-import { RouterService } from 'src/app/services/router/router.service';
+import { RouterService } from '../../services/router/router.service';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
