@@ -4,7 +4,7 @@ import { ModalController } from '@ionic/angular';
 
 import { AssetService } from '../../services/asset/asset.service';
 import { ApiKeyValidationModalComponent } from '../api-key-validation-modal/api-key-validation-modal.component';
-import { toggleDarkTheme } from '../../app.component';
+import { getPrefersDark, toggleDarkTheme } from '../../app.component';
 
 @Component({
   selector: 'app-account',
@@ -17,8 +17,7 @@ export class AccountComponent {
 
   constructor(private assetService: AssetService, private modalCtrl: ModalController) {
     // Sets up dark theme toggle logic
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    this.darkModeFormControl = new FormControl(prefersDark);
+    this.darkModeFormControl = new FormControl(getPrefersDark());
     this.darkModeFormControl.valueChanges.subscribe(prefersDark => {
       toggleDarkTheme(!!prefersDark);
     });
