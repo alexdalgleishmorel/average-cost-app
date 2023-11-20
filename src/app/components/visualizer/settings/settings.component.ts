@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { AssetInformation, AssetService, Currency } from '../../../services/asset/asset.service';
 import { AssetDeleteConfirmationModalComponent } from '../../asset-delete-confirmation-modal/asset-delete-confirmation-modal.component';
+import { RouterService } from 'src/app/services/router/router.service';
 
 @Component({
   selector: 'app-settings',
@@ -33,7 +34,7 @@ export class SettingsComponent {
     private activatedRoute: ActivatedRoute,
     private assetService: AssetService,
     private modalCtrl: ModalController,
-    private router: Router
+    private router: RouterService
   ) {
     this.assetSymbol = this.activatedRoute.snapshot.parent?.paramMap.get('symbol')!;
     this.currencies = Object.keys(Currency);
@@ -78,7 +79,7 @@ export class SettingsComponent {
       history: this.assetService.currentAssetSubject.getValue().history
     });
     this.formGroup.markAsPristine();
-    this.router.navigate(['/', 'visualizer', this.assetSymbol]);
+    this.router.navigate(`/visualizer/${this.assetSymbol}`);
   }
 
   /**
@@ -94,7 +95,7 @@ export class SettingsComponent {
 
     if (confirmation) {
       this.assetService.removeAsset(this.assetSymbol);
-      this.router.navigate(['/', 'hub']);
+      this.router.navigate('/hub');
     }
   }
 

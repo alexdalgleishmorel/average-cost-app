@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { AssetInformation, AssetService, NetworthMetaData } from '../../services/asset/asset.service';
 import { AssetCreationModalComponent } from '../asset-creation-modal/asset-creation-modal.component';
+import { RouterService } from 'src/app/services/router/router.service';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -22,7 +22,7 @@ export class HubComponent {
   constructor(
     private assetService: AssetService,
     private modalCtrl: ModalController,
-    private router: Router
+    private router: RouterService
   ) {
     assetService.networthMetaDataSubject.subscribe(networthMetaData => {
       this.networthMetaData = networthMetaData;
@@ -42,7 +42,7 @@ export class HubComponent {
    * @param {AssetInformation} asset The asset that was selected.
    */
   public assetSelected(asset: AssetInformation) {
-    this.router.navigate([`/visualizer/${asset.symbol}`]);
+    this.router.navigate(`/visualizer/${asset.symbol}`);
   }
 
   /**
@@ -50,7 +50,7 @@ export class HubComponent {
    */
   public networthSelected() {
     if (this.networthMetaData) {
-      this.router.navigate([`/visualizer/NETWORTH`]);
+      this.router.navigate(`/visualizer/NETWORTH`);
     }
   }
 
@@ -70,7 +70,7 @@ export class HubComponent {
    * @param {AssetInformation} asset The asset information. 
    */
   public updateAsset(asset: AssetInformation) {
-    this.router.navigate([`/visualizer/${asset.symbol}/configuration`]);
+    this.router.navigate(`/visualizer/${asset.symbol}/configuration`);
   }
 
   /**
@@ -153,6 +153,6 @@ export class HubComponent {
    * Navigates the user to the main settings page
    */
   navigateToSettings() {
-    this.router.navigate(['', 'settings']);
+    this.router.navigate('/settings');
   }
 }

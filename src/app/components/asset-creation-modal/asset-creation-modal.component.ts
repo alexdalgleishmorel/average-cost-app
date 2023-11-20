@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { AssetService, AssetType, Currency } from '../../services/asset/asset.service';
+import { RouterService } from 'src/app/services/router/router.service';
 
 @Component({
   selector: 'app-asset-creation-modal',
@@ -35,7 +35,7 @@ export class AssetCreationModalComponent {
     private _formBuilder: FormBuilder,
     private assetService: AssetService,
     private modalCtrl: ModalController,
-    private router: Router
+    private router: RouterService
   ) {
     this.currencies = Object.keys(Currency);
   }
@@ -85,7 +85,7 @@ export class AssetCreationModalComponent {
     let assetCreationSubscription = this.assetService.lastUpdatedAssetSubject.subscribe(asset => {
       if (asset.symbol === this.symbolFormControl.value) {
         assetCreationSubscription.unsubscribe();
-        this.router.navigate(['/', 'visualizer', this.symbolFormControl.value]);
+        this.router.navigate(`/visualizer/${this.symbolFormControl.value}`);
         this.modalCtrl.dismiss();
       }
     });

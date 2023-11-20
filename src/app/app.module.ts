@@ -19,6 +19,7 @@ import { AssetCreationModalComponent } from './components/asset-creation-modal/a
 import { AssetFailureModalComponent } from './components/asset-failure-modal/asset-failure-modal.component';
 import { AssetDeleteConfirmationModalComponent } from './components/asset-delete-confirmation-modal/asset-delete-confirmation-modal.component';
 import { ApiKeyValidationModalComponent } from './components/api-key-validation-modal/api-key-validation-modal.component';
+import { RouterService } from './services/router/router.service';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { ApiKeyValidationModalComponent } from './components/api-key-validation-
   ],
   providers: [
     AssetService,
+    RouterService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent],
