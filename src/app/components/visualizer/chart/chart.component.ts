@@ -15,7 +15,6 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
   styleUrls: ['./chart.component.scss'],
 })
 export class ChartComponent implements OnInit {
-
   public lineChart?: any;
 
   public calculatedAverageCost: number = 0;
@@ -28,28 +27,55 @@ export class ChartComponent implements OnInit {
 
   public budgetSpentFormControl: FormControl = new FormControl(0);
 
+  private lastDrawnAverageCost: number = 0;
+
+  afterDraw (chart: any) {
+    if (chart.config.type !== 'line') {
+      return;
+    }
+
+    const mainCanvas = document.getElementById('lineChart') as HTMLCanvasElement | null;
+    const overlayCanvas = document.getElementById('overlay') as HTMLCanvasElement | null;
+    if (!mainCanvas) return;
+    if (!overlayCanvas) return;
+
+    const ctxOverlay = overlayCanvas.getContext('2d');
+    if (!ctxOverlay) return;
+
+    ctxOverlay.imageSmoothingEnabled = false;
+
+    const yAxis = chart.scales.y;
+    const xAxis = chart.scales.x;
+    const yScale = overlayCanvas.height / (chart.chartArea.height+(yAxis.getPixelForValue(yAxis.max)*2));
+    const xOrigin = (overlayCanvas.width / (chart.chartArea.width)) * xAxis.getPixelForValue(0);
+
+    let yValue = yAxis.getPixelForValue(this.assetInformation.symbol !== 'NETWORTH' ? this.calculatedAverageCost : this.calculatedBudget);
+    yValue = yValue * yScale;
+    ctxOverlay.save();
+
+    if (this.lastDrawnAverageCost !== this.calculatedAverageCost) {
+      ctxOverlay.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+
+      ctxOverlay.strokeStyle = '#2dd36f';
+      ctxOverlay.lineWidth = 1;
+
+      ctxOverlay.beginPath();
+      ctxOverlay.moveTo(xOrigin, yValue);
+      ctxOverlay.lineTo(chart.chartArea.right, yValue);
+      ctxOverlay.stroke();
+      ctxOverlay.restore();
+
+      this.lastDrawnAverageCost = this.calculatedAverageCost;
+    }
+  }
+
   /**
    * Handles drawing the green average cost line overlayed over the asset chart data
    */
   averageCostPlugin = {
     id: 'average-cost-plugin',
     afterDraw: (chart: any) => {
-      if (chart.config.type !== 'line') {
-        return;
-      }
-  
-      const ctx = chart.ctx;
-      const yAxis = chart.scales.y;
-      const yValue = yAxis.getPixelForValue(this.assetInformation.symbol !== 'NETWORTH' ? this.calculatedAverageCost : this.calculatedBudget);
-  
-      ctx.save();
-      ctx.strokeStyle = '#2dd36f';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(chart.chartArea.left, yValue);
-      ctx.lineTo(chart.chartArea.right, yValue);
-      ctx.stroke();
-      ctx.restore();
+      this.afterDraw(chart)
     }
   }
 
@@ -94,9 +120,8 @@ export class ChartComponent implements OnInit {
       } else {
         setTimeout(() => {
           this.createChart(asset.history?.dataPoints ? asset.history.dataPoints : []);
-        }, 1000);
+        }, 1500);
       }
-
     });
   }
 
@@ -156,6 +181,7 @@ export class ChartComponent implements OnInit {
         }
       },
       pointHitRadius: 25,
+      cubicInterpolationMode: 'monotone'
     };
 
     // Create the line chart
@@ -201,7 +227,7 @@ export class ChartComponent implements OnInit {
 
     this.assetInformation.calculatedAverageCost = this.calculatedAverageCost;
 
-    this.lineChart ? this.updateChart() : this.assetService.currentAssetSubject.next(this.assetInformation);
+    this.lineChart ? this.afterDraw(this.lineChart) : this.assetService.currentAssetSubject.next(this.assetInformation);
   }
 
   /**

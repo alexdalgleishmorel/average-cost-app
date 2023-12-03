@@ -14,7 +14,10 @@
         </div>
       </ion-card-header>
     </ion-card>
-    <div class="chart-container"><canvas id="lineChart"></canvas></div>
+    <div class="chart-container">
+      <canvas id="lineChart" style="position: absolute;"></canvas>
+      <canvas id="overlay" style="width: 100%; height: 100%;"></canvas>
+    </div>
     <div class="footer-content">
       <ion-range [pin]="true" [pinFormatter]="pinFormatter" (ionInput)="onSliderChange($event)" [formControl]="budgetSpentFormControl"></ion-range>
       <ion-card-subtitle color="primary" class="slider-label">% BUDGET SPENT</ion-card-subtitle>
