@@ -39,7 +39,7 @@ export class AssetService {
    * @param {AssetInformation} asset The asset information.
    * @param {boolean} openingAsset A flag denoting whether we're performing this update to open the asset chart.
    */
-  updateAssetInformation(asset: AssetInformation, openingAsset: boolean = false) {
+  updateAssetInformation(asset: AssetInformation, showUpdateFailure: boolean = false, showCreationFailure: boolean = false) {
     const assetStorageName: string = this.getAssetStorageName(asset.symbol);
 
     // Get the latest price history of the asset
@@ -47,16 +47,20 @@ export class AssetService {
       if (data.dataPoints.length) {
         asset.history = data;
       } else {
-        if (openingAsset) {
+        if (showUpdateFailure || showCreationFailure) {
           let modal = await this.modalCtrl.create({
             component: AssetFailureModalComponent,
             componentProps: {
-              failureType: !asset.history ? AssetFailureType.CREATION : AssetFailureType.UPDATE,
+              failureType: showUpdateFailure ? AssetFailureType.UPDATE : AssetFailureType.CREATION,
               asset: asset,
               lastUpdated: data.lastUpdated
             }
           });
           modal.present();
+
+          if (showCreationFailure) {
+            return;
+          }
         }
 
         if (!asset.history?.dataPoints.length) {

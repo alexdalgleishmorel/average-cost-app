@@ -67,6 +67,14 @@ export class AssetCreationModalComponent {
       return;
     }
 
+    let assetCreationSubscription = this.assetService.lastUpdatedAssetSubject.subscribe(asset => {
+      if (asset.symbol === this.symbolFormControl.value) {
+        assetCreationSubscription.unsubscribe();
+        this.router.navigate(`/visualizer/${this.symbolFormControl.value}`);
+        this.modalCtrl.dismiss();
+      }
+    });
+
     try {
       this.assetService.updateAssetInformation({
         averageCost: Number(this.averageCostFormControl.value),
@@ -75,20 +83,12 @@ export class AssetCreationModalComponent {
         shares: Number(this.sharesFormControl.value),
         symbol: this.symbolFormControl.value,
         type: this.assetType
-      });
+      }, false, true);
     } catch (AssetAlreadyExistsError) {
       this.assetAlreadyExistsError = true;
       this.formGroup.markAsPristine();
       return;
     }
-
-    let assetCreationSubscription = this.assetService.lastUpdatedAssetSubject.subscribe(asset => {
-      if (asset.symbol === this.symbolFormControl.value) {
-        assetCreationSubscription.unsubscribe();
-        this.router.navigate(`/visualizer/${this.symbolFormControl.value}`);
-        this.modalCtrl.dismiss();
-      }
-    });
 
     this.assetAlreadyExistsError = false;
     this.formGroup.markAsPristine();
