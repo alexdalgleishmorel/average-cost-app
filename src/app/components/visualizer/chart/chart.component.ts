@@ -28,6 +28,7 @@ export class ChartComponent implements OnInit {
   public budgetSpentFormControl: FormControl = new FormControl(0);
 
   private lastDrawnAverageCost: number = 0;
+  private isOverlayCanvasDrawn: boolean = false;
 
   afterDraw (chart: any) {
     if (chart.config.type !== 'line') {
@@ -38,6 +39,11 @@ export class ChartComponent implements OnInit {
     const overlayCanvas = document.getElementById('overlay') as HTMLCanvasElement | null;
     if (!mainCanvas) return;
     if (!overlayCanvas) return;
+
+    if (!this.isOverlayCanvasDrawn) {
+      overlayCanvas.width = overlayCanvas.offsetWidth;
+      overlayCanvas.height = overlayCanvas.offsetHeight;
+    }
 
     const ctxOverlay = overlayCanvas.getContext('2d');
     if (!ctxOverlay) return;
@@ -57,7 +63,7 @@ export class ChartComponent implements OnInit {
       ctxOverlay.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
 
       ctxOverlay.strokeStyle = '#2dd36f';
-      ctxOverlay.lineWidth = 1;
+      ctxOverlay.lineWidth = 2;
 
       ctxOverlay.beginPath();
       ctxOverlay.moveTo(xOrigin, yValue);
@@ -66,6 +72,7 @@ export class ChartComponent implements OnInit {
       ctxOverlay.restore();
 
       this.lastDrawnAverageCost = this.calculatedAverageCost;
+      this.isOverlayCanvasDrawn = true;
     }
   }
 
