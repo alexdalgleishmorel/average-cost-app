@@ -392,7 +392,7 @@ export class AssetService {
    * @returns {string} Returns the API key as a string.
    */
   public getApiKey(): string {
-    return localStorage.getItem('ALPHA_VANTAGE_API_KEY') || '';
+    return localStorage.getItem('ALPHA_VANTAGE_API_KEY') || 'DEFAULT_KEY';
   }
 }
 
