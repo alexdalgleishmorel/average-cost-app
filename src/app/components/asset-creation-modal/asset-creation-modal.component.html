@@ -26,8 +26,9 @@
     <ion-card-content>
       The asset symbol, used to retrieve its price history
       <ion-input
+        placeholder="SYMBOL"
         helperText="Enter the asset symbol"
-        errorText="Required"
+        [errorText]="symbolFormControl.errors?.['min'] ? 'Cannot be negative' : 'Required'"
         [formControl]="symbolFormControl"
       >
       </ion-input>
@@ -57,8 +58,10 @@
       Your current average cost <ion-text *ngIf="assetType === getCryptoAssetType()">(USD)</ion-text>
       <ion-input
         type="number"
+        [min]="0"
+        placeholder="AVERAGE COST"
         helperText="Enter your average cost"
-        errorText="Required"
+        [errorText]="averageCostFormControl.errors?.['min'] ? 'Cannot be negative' : 'Required'"
         [formControl]="averageCostFormControl"
       >
       </ion-input>
@@ -73,8 +76,10 @@
       Your amount of shares owned
       <ion-input
         type="number"
+        [min]="0"
+        placeholder="SHARES OWNED"
         helperText="Enter your shares"
-        errorText="Required"
+        [errorText]="sharesFormControl.errors?.['min'] ? 'Cannot be negative' : 'Required'"
         [formControl]="sharesFormControl"
       >
       </ion-input>
@@ -89,8 +94,10 @@
       Your amount owned
       <ion-input
         type="number"
+        [min]="0"
+        placeholder="AMOUNT OWNED"
         helperText="Enter your amount (i.e. 0.53 BTC)"
-        errorText="Required"
+        [errorText]="sharesFormControl.errors?.['min'] ? 'Cannot be negative' : 'Required'"
         [formControl]="sharesFormControl"
       >
       </ion-input>
@@ -105,8 +112,10 @@
       Your maximum budget for purchasing more
       <ion-input
         type="number"
+        [min]="0"
+        placeholder="BUDGET"
         helperText="Enter your budget"
-        errorText="Required"
+        [errorText]="budgetFormControl.errors?.['min'] ? 'Cannot be negative' : 'Required'"
         [formControl]="budgetFormControl"
       >
       </ion-input>

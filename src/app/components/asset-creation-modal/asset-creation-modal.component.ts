@@ -14,9 +14,9 @@ export class AssetCreationModalComponent {
   public assetType: AssetType = AssetType.STOCK;
 
   public symbolFormControl = new FormControl('', [Validators.required]);
-  public averageCostFormControl = new FormControl(null, [Validators.required]);
-  public sharesFormControl = new FormControl(null, [Validators.required]);
-  public budgetFormControl = new FormControl(null, [Validators.required]);
+  public averageCostFormControl = new FormControl(null, [Validators.required, Validators.min(0)]);
+  public sharesFormControl = new FormControl(null, [Validators.required, Validators.min(0)]);
+  public budgetFormControl = new FormControl(null, [Validators.required, Validators.min(0)]);
   public currencyFormControl = new FormControl(Currency.USD, []);
 
   public formGroup: FormGroup = this._formBuilder.group({

@@ -13,10 +13,10 @@ import { RouterService } from '../../../services/router/router.service';
 })
 export class SettingsComponent {
 
-  public averageCostFormControl = new FormControl(0, [Validators.required]);
+  public averageCostFormControl = new FormControl(0, [Validators.required, Validators.min(0)]);
   public currencyFormControl = new FormControl(Currency.USD, []);
-  public sharesFormControl = new FormControl(0, [Validators.required]);
-  public budgetFormControl = new FormControl(0, [Validators.required]);
+  public sharesFormControl = new FormControl(0, [Validators.required, Validators.min(0)]);
+  public budgetFormControl = new FormControl(0, [Validators.required, Validators.min(0)]);
 
   public formGroup: FormGroup = this._formBuilder.group({
     averageCostFormControl: this.averageCostFormControl,
