@@ -102,13 +102,20 @@ export class ChartComponent implements OnInit {
    * Handles chart intialization. Contains logic that ensures only one chart view exists at a time within the application.
    */
   ngOnInit() {
-    this.assetService.currentAssetSubject.pipe(debounceTime(500)).subscribe((asset: AssetInformation) => {
-
-      if (!this.isCurrentAssetView(asset) || this.artifact) {
+    this.assetService.assetChangedNotification.subscribe(asset => {
+      if (!this.isCurrentAssetView(asset)) {
         if (this.lineChart) {
+          this.artifact = true;
           this.lineChart.destroy();
           this.lineChart = null;
         }
+      }
+    });
+
+    this.assetService.currentAssetSubject.pipe(debounceTime(500)).subscribe((asset: AssetInformation) => {
+      if (this.isCurrentAssetView(asset)) {
+        this.assetService.assetChangedNotification.next(asset);
+      } else {
         return;
       }
 
@@ -128,8 +135,9 @@ export class ChartComponent implements OnInit {
         this.updateChart();
       } else {
         setTimeout(() => {
-          this.createChart(asset.history?.dataPoints ? asset.history.dataPoints : []);
-          this.artifact = true;
+          if (!this.artifact) {
+            this.createChart(asset.history?.dataPoints ? asset.history.dataPoints : []);
+          }
         }, 2000);
       }
     });

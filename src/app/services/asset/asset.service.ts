@@ -15,6 +15,7 @@ export class AssetService {
   public chartViewActive: boolean = false;
   public currentAssetSubject: BehaviorSubject<AssetInformation> = new BehaviorSubject<AssetInformation>({ symbol: '' });
   public lastUpdatedAssetSubject: Subject<AssetInformation> = new Subject<AssetInformation>();
+  public assetChangedNotification: Subject<AssetInformation> = new Subject<AssetInformation>();
   public networthMetaDataSubject: BehaviorSubject<NetworthMetaData> = new BehaviorSubject<NetworthMetaData>({ bookValue: 0, marketValue: 0} );
 
   private assetsUpdated: BehaviorSubject<number> = new BehaviorSubject<number>(0);
