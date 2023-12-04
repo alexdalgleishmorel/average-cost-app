@@ -5,7 +5,7 @@
           <div class="centered">
             <ion-text color="medium"><b>NETWORTH</b></ion-text>
             <div>
-              <ion-text color="primary">{{formatMoneyValue(networthMetaData?.marketValue)}} USD</ion-text>
+              <ion-text color="primary">{{formatMoneyValue(networthMetaData?.marketValue)}} {{getDefaultCurrency()}}</ion-text>
               &nbsp;
               <ion-text [color]="getNetworthChange() >= 0 ? 'success' : 'danger'">{{formatChangeValue(getNetworthChange())}}</ion-text>
             </div>

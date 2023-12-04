@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { AssetInformation, AssetService, NetworthMetaData } from '../../services/asset/asset.service';
+import { AssetInformation, AssetService, Currency, NetworthMetaData } from '../../services/asset/asset.service';
 import { AssetCreationModalComponent } from '../asset-creation-modal/asset-creation-modal.component';
 import { RouterService } from '../../services/router/router.service';
 
@@ -154,5 +154,14 @@ export class HubComponent {
    */
   navigateToSettings() {
     this.router.navigate('/settings');
+  }
+
+  /**
+   * Determines the default curreny of the user.
+   * 
+   * @returns {Currency} A currency
+   */
+  getDefaultCurrency() {
+    return this.assetService.getDefaultCurrency();
   }
 }

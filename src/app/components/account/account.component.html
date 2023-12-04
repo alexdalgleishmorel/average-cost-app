@@ -22,6 +22,26 @@
         </ion-card>
         <ion-card>
           <ion-card-header>
+            <ion-card-subtitle color="primary">NETWORTH CURRENCY</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="row">
+              <ion-select
+                [formControl]="currencyFormControl"
+              >
+                <ion-select-option *ngFor="let currency of currencies" [value]="currency">{{currency}}</ion-select-option>
+              </ion-select>
+              <div class="spacer"></div>
+              <ion-button color="primary" [disabled]="!canSaveCurrency()" (click)="saveDefaultCurrency()">
+                SAVE
+              </ion-button>
+            </div>
+            <div class="spacer"></div>
+            <ion-text>Choose the overall currency your networth will be calculated in.</ion-text>
+          </ion-card-content>
+        </ion-card>
+        <ion-card>
+          <ion-card-header>
             <ion-card-subtitle color="primary">API KEY</ion-card-subtitle>
           </ion-card-header>
         

@@ -290,4 +290,13 @@ export class ChartComponent implements OnInit {
   getAssetCurrency(): Currency {
     return this.assetService.getAsset(this.assetInformation.symbol).currency || Currency.USD;
   }
+
+  /**
+   * Determines the default curreny of the user.
+   * 
+   * @returns {Currency} A currency
+   */
+  getDefaultCurrency() {
+    return this.assetService.getDefaultCurrency();
+  }
 }

@@ -299,13 +299,13 @@ export class AssetService {
           }
           if (asset.shares) {
             if (marketValuePriceLookup[dataPoint.date]) {
-              marketValuePriceLookup[dataPoint.date] += asset.currency === Currency.USD ? asset.shares * dataPoint.value : (asset.shares * dataPoint.value)*(1/cadUsdConversion);
+              marketValuePriceLookup[dataPoint.date] += this.convertCurrency(asset, dataPoint.value, cadUsdConversion);
             } else {
-              marketValuePriceLookup[dataPoint.date] = asset.currency === Currency.USD ? asset.shares * dataPoint.value : (asset.shares * dataPoint.value)*(1/cadUsdConversion);
+              marketValuePriceLookup[dataPoint.date] = this.convertCurrency(asset, dataPoint.value, cadUsdConversion);
             }
           }
         });
-        bookValue += asset.currency === Currency.USD ? asset.shares * asset.averageCost : (asset.shares * asset.averageCost)*(1/cadUsdConversion);
+        bookValue += this.convertCurrency(asset, asset.averageCost, cadUsdConversion);
       }
     });
 
@@ -335,6 +335,23 @@ export class AssetService {
         lastUpdated: moment().format('YYYY-MM-DD')
       }
     });
+  }
+
+  private convertCurrency(asset: AssetInformation, marketPrice: number, cadUsdConversion: number): number {
+    if (!asset.shares || !marketPrice) return 0;
+    if (asset.currency === Currency.USD && this.getDefaultCurrency() === Currency.USD) {
+      return asset.shares * marketPrice;
+    }
+    if (asset.currency === Currency.CAD && this.getDefaultCurrency() === Currency.CAD) {
+      return asset.shares * marketPrice;
+    }
+    if (asset.currency === Currency.USD && this.getDefaultCurrency() === Currency.CAD) {
+      return (asset.shares * marketPrice)*(1/cadUsdConversion);
+    }
+    if (asset.currency === Currency.CAD && this.getDefaultCurrency() === Currency.USD) {
+      return (asset.shares * marketPrice)*cadUsdConversion;
+    }
+    return 0;
   }
 
   /**
@@ -393,6 +410,25 @@ export class AssetService {
    */
   public getApiKey(): string {
     return localStorage.getItem('ALPHA_VANTAGE_API_KEY') || 'DEFAULT_KEY';
+  }
+
+  /**
+   * Looks for a default currency in storage.
+   * 
+   * @returns {Currency} Returns default currency or USD if nothing is saved.
+   */
+  public getDefaultCurrency(): string {
+    return localStorage.getItem('DEFAULT_CURRENCY') || Currency.USD;
+  }
+
+  /**
+   * Saves a default currency to local storage.
+   * 
+   * @param {Currency} currency The currency to save.
+   */
+  public saveDefaultCurrency(currency: string) {
+    localStorage.setItem('DEFAULT_CURRENCY', currency);
+    this.updateNetworthInformation();
   }
 }
 

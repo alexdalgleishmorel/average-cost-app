@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 
-import { AssetService } from '../../services/asset/asset.service';
+import { AssetService, Currency } from '../../services/asset/asset.service';
 import { ApiKeyValidationModalComponent } from '../api-key-validation-modal/api-key-validation-modal.component';
 import { getPrefersDark, toggleDarkTheme } from '../../app.component';
 
@@ -14,6 +14,9 @@ import { getPrefersDark, toggleDarkTheme } from '../../app.component';
 export class AccountComponent {
   public apiKeyFormControl;
   public darkModeFormControl;
+  public currencyFormControl;
+
+  public currencies: string[];
 
   constructor(private assetService: AssetService, private modalCtrl: ModalController) {
     // Sets up dark theme toggle logic
@@ -23,6 +26,9 @@ export class AccountComponent {
     });
     // Sets up api key input form control
     this.apiKeyFormControl = new FormControl(this.assetService.getApiKey());
+    // Set up currencies
+    this.currencyFormControl = new FormControl(this.assetService.getDefaultCurrency());
+    this.currencies = Object.keys(Currency);
   }
 
   /**
@@ -57,11 +63,28 @@ export class AccountComponent {
   }
 
   /**
+   * Saves a default currency to storage
+   */
+  saveDefaultCurrency() {
+    this.assetService.saveDefaultCurrency(this.currencyFormControl.value!);
+    this.currencyFormControl.markAsPristine();
+  }
+
+  /**
    * Determines whether the api key input can be saved at the given moment.
    * 
    * @returns {boolean} Whether the API key input can be saved.
    */
   canSaveApiKey(): boolean {
     return this.apiKeyFormControl.dirty && !!this.apiKeyFormControl.getRawValue();
+  }
+
+  /**
+   * Determines whether the currency input can be saved at the given moment.
+   * 
+   * @returns {boolean} Whether the currency input can be saved.
+   */
+  canSaveCurrency(): boolean {
+    return this.currencyFormControl.dirty && this.currencyFormControl.getRawValue() !== this.assetService.getDefaultCurrency();
   }
 }
