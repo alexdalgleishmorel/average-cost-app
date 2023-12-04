@@ -127,7 +127,7 @@ export class ChartComponent implements OnInit {
       } else {
         setTimeout(() => {
           this.createChart(asset.history?.dataPoints ? asset.history.dataPoints : []);
-        }, 1500);
+        }, 2000);
       }
     });
   }
