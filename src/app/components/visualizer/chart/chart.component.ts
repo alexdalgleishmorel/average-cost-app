@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import Chart from 'chart.js/auto';
 import { AssetInformation, AssetService, ChartDataPoint, Currency } from '../../../services/asset/asset.service';
+import { debounceTime } from 'rxjs';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -16,6 +17,7 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 })
 export class ChartComponent implements OnInit {
   public lineChart?: any;
+  public artifact: boolean = false;
 
   public calculatedAverageCost: number = 0;
   public calculatedBudget: number = 0;
@@ -100,9 +102,9 @@ export class ChartComponent implements OnInit {
    * Handles chart intialization. Contains logic that ensures only one chart view exists at a time within the application.
    */
   ngOnInit() {
-    this.assetService.currentAssetSubject.subscribe((asset: AssetInformation) => {
+    this.assetService.currentAssetSubject.pipe(debounceTime(500)).subscribe((asset: AssetInformation) => {
 
-      if (!this.isCurrentAssetView(asset)) {
+      if (!this.isCurrentAssetView(asset) || this.artifact) {
         if (this.lineChart) {
           this.lineChart.destroy();
           this.lineChart = null;
@@ -127,6 +129,7 @@ export class ChartComponent implements OnInit {
       } else {
         setTimeout(() => {
           this.createChart(asset.history?.dataPoints ? asset.history.dataPoints : []);
+          this.artifact = true;
         }, 2000);
       }
     });
