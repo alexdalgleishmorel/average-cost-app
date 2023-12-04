@@ -8,77 +8,82 @@
     </ion-card>
     <div class="configuration-container">
       <div class="configuration-input-container">
-        <ion-card>
-          <ion-card-header>
-            <ion-card-subtitle color="primary">SHARES OWNED</ion-card-subtitle>
-          </ion-card-header>
-        
-          <ion-card-content>
-            <ion-input
-              type="number"
-              [min]="0"
-              placeholder="SHARES"
-              helperText="Enter your shares"
-              [errorText]="sharesFormControl.errors?.['min'] ? 'Cannot be negative' : 'Required'"
-              [formControl]="sharesFormControl"
-            >
-            </ion-input>
-          </ion-card-content>
-        </ion-card>
-        <ion-card>
-          <ion-card-header>
-            <ion-card-subtitle color="primary">CURRENCY</ion-card-subtitle>
-          </ion-card-header>
-        
-          <ion-card-content>
-            <ion-select
-              [formControl]="currencyFormControl"
-            >
-              <ion-select-option *ngFor="let currency of currencies" [value]="currency">{{currency}}</ion-select-option>
-            </ion-select>
-          </ion-card-content>
-        </ion-card>
-        <ion-card>
-          <ion-card-header>
-            <ion-card-subtitle color="primary">AVERAGE COST</ion-card-subtitle>
-          </ion-card-header>
-        
-          <ion-card-content>
-            <ion-input
-              type="number"
-              [min]="0"
-              placeholder="AVERAGE COST"
-              helperText="Enter your average cost"
-              [errorText]="averageCostFormControl.errors?.['min'] ? 'Cannot be negative' : 'Required'"
-              [formControl]="averageCostFormControl"
-            >
-            </ion-input>
-          </ion-card-content>
-        </ion-card>
-        <ion-card>
-          <ion-card-header>
-            <ion-card-subtitle color="primary">BUDGET</ion-card-subtitle>
-          </ion-card-header>
-        
-          <ion-card-content>
-            <ion-input
-              type="number"
-              [min]="0"
-              placeholder="BUDGET"
-              helperText="Enter your budget"
-              [errorText]="budgetFormControl.errors?.['min'] ? 'Cannot be negative' : 'Required'"
-              [formControl]="budgetFormControl"
-            >
-            </ion-input>
-          </ion-card-content>
-        </ion-card>
+        <div class="row">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-subtitle color="primary">SHARES OWNED</ion-card-subtitle>
+            </ion-card-header>
+          
+            <ion-card-content>
+              <ion-input
+                type="number"
+                [min]="0"
+                placeholder="SHARES"
+                helperText="Enter your shares"
+                [errorText]="sharesFormControl.errors?.['min'] ? 'Cannot be negative' : 'Required'"
+                [formControl]="sharesFormControl"
+              >
+              </ion-input>
+            </ion-card-content>
+          </ion-card>
+          <ion-card>
+            <ion-card-header>
+              <ion-card-subtitle color="primary">CURRENCY</ion-card-subtitle>
+            </ion-card-header>
+          
+            <ion-card-content>
+              <ion-select
+                [formControl]="currencyFormControl"
+              >
+                <ion-select-option *ngFor="let currency of currencies" [value]="currency">{{currency}}</ion-select-option>
+              </ion-select>
+            </ion-card-content>
+          </ion-card>
+          <ion-card>
+            <ion-card-header>
+              <ion-card-subtitle color="primary">AVERAGE COST</ion-card-subtitle>
+            </ion-card-header>
+          
+            <ion-card-content>
+              <ion-input
+                type="number"
+                [min]="0"
+                placeholder="AVERAGE COST"
+                helperText="Enter your average cost"
+                [errorText]="averageCostFormControl.errors?.['min'] ? 'Cannot be negative' : 'Required'"
+                [formControl]="averageCostFormControl"
+              >
+              </ion-input>
+            </ion-card-content>
+          </ion-card>
+          <ion-card>
+            <ion-card-header>
+              <ion-card-subtitle color="primary">BUDGET</ion-card-subtitle>
+            </ion-card-header>
+          
+            <ion-card-content>
+              <ion-input
+                type="number"
+                [min]="0"
+                placeholder="BUDGET"
+                helperText="Enter your budget"
+                [errorText]="budgetFormControl.errors?.['min'] ? 'Cannot be negative' : 'Required'"
+                [formControl]="budgetFormControl"
+              >
+              </ion-input>
+            </ion-card-content>
+          </ion-card>
+        </div>
+        <div class="buttons-container">
+          <ion-button color="primary" [disabled]="!formGroup.valid || formGroup.pristine" (click)="saveConfiguration()">
+            SAVE
+          </ion-button>
+          <ion-button color="danger" (click)="deleteAsset()">
+            REMOVE
+          </ion-button>
+        </div>
       </div>
-      <ion-button color="primary" [disabled]="!formGroup.valid || formGroup.pristine" (click)="saveConfiguration()">
-        SAVE
-      </ion-button>
-      <ion-button color="danger" (click)="deleteAsset()">
-        REMOVE
-      </ion-button>
     </div>
+    <div class="spacer"></div>
   </div>
 </ion-content>
