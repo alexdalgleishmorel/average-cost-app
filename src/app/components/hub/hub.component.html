@@ -31,7 +31,7 @@
                     <div>
                       <ion-text color="primary">{{formatMoneyValue(getAssetMarketValue(asset))}} {{asset.currency}}</ion-text>
                       &nbsp;
-                      <ion-text [color]="getNetworthChange() >= 0 ? 'success' : 'danger'">{{formatChangeValue(getAssetMarketValueChange(asset))}}</ion-text>
+                      <ion-text [color]="getAssetMarketValueChange(asset) >= 0 ? 'success' : 'danger'">{{formatChangeValue(getAssetMarketValueChange(asset))}}</ion-text>
                     </div>
                   </div>
                 </div>
