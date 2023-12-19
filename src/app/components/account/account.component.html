@@ -27,6 +27,8 @@
           <ion-card-content>
             <div class="row">
               <ion-select
+                mode="md"
+                fill="outline"
                 [formControl]="currencyFormControl"
               >
                 <ion-select-option *ngFor="let currency of currencies" [value]="currency">{{currency}}</ion-select-option>
@@ -56,6 +58,8 @@
             <div class="row">
               <ion-input
                 helperText="Provide your API key here."
+                mode="md"
+                fill="outline"
                 errorText="Required"
                 placeholder="API KEY"
                 [formControl]="apiKeyFormControl">

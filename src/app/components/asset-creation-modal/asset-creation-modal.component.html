@@ -24,10 +24,11 @@
     </ion-card-header>
   
     <ion-card-content>
-      The asset symbol, used to retrieve its price history
       <ion-input
-        placeholder="SYMBOL"
-        helperText="Enter the asset symbol"
+        labelPlacement="stacked"
+        placeholder="XYZ"
+        mode="md"
+        fill="outline"
         [errorText]="symbolFormControl.errors?.['min'] ? 'Cannot be negative' : 'Required'"
         [formControl]="symbolFormControl"
       >
@@ -42,6 +43,8 @@
   
     <ion-card-content>
       <ion-select
+        mode="md"
+        fill="outline"
         [formControl]="currencyFormControl"
       >
         <ion-select-option *ngFor="let currency of currencies" [value]="currency">{{currency}}</ion-select-option>
@@ -55,12 +58,13 @@
     </ion-card-header>
   
     <ion-card-content>
-      Your current average cost <ion-text *ngIf="assetType === getCryptoAssetType()">(USD)</ion-text>
       <ion-input
         type="number"
         [min]="0"
-        placeholder="AVERAGE COST"
-        helperText="Enter your average cost"
+        labelPlacement="stacked"
+        mode="md"
+        fill="outline"
+        placeholder="0.00"
         [errorText]="averageCostFormControl.errors?.['min'] ? 'Cannot be negative' : 'Required'"
         [formControl]="averageCostFormControl"
       >
@@ -73,12 +77,13 @@
     </ion-card-header>
   
     <ion-card-content>
-      Your amount of shares owned
       <ion-input
         type="number"
         [min]="0"
-        placeholder="SHARES OWNED"
-        helperText="Enter your shares"
+        placeholder="0"
+        labelPlacement="stacked"
+        mode="md"
+        fill="outline"
         [errorText]="sharesFormControl.errors?.['min'] ? 'Cannot be negative' : 'Required'"
         [formControl]="sharesFormControl"
       >
@@ -91,12 +96,13 @@
     </ion-card-header>
   
     <ion-card-content>
-      Your amount owned
       <ion-input
         type="number"
         [min]="0"
-        placeholder="AMOUNT OWNED"
-        helperText="Enter your amount (i.e. 0.53 BTC)"
+        labelPlacement="stacked"
+        mode="md"
+        fill="outline"
+        placeholder="0"
         [errorText]="sharesFormControl.errors?.['min'] ? 'Cannot be negative' : 'Required'"
         [formControl]="sharesFormControl"
       >
@@ -109,12 +115,13 @@
     </ion-card-header>
   
     <ion-card-content>
-      Your maximum budget for purchasing more
       <ion-input
         type="number"
         [min]="0"
-        placeholder="BUDGET"
-        helperText="Enter your budget"
+        labelPlacement="stacked"
+        mode="md"
+        fill="outline"
+        placeholder="0.00"
         [errorText]="budgetFormControl.errors?.['min'] ? 'Cannot be negative' : 'Required'"
         [formControl]="budgetFormControl"
       >
