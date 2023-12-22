@@ -122,6 +122,7 @@
         mode="md"
         fill="outline"
         placeholder="0.00"
+        helperText="Your budget for buying more of this asset"
         [errorText]="budgetFormControl.errors?.['min'] ? 'Cannot be negative' : 'Required'"
         [formControl]="budgetFormControl"
       >
