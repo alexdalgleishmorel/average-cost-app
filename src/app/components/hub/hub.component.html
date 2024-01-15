@@ -59,11 +59,11 @@
 
 <ng-template #noAssets>
   <div *ngIf="apiKeyConfigured() else noApiKey" class="content">
-    <ion-fab>
-      <ion-fab-button (click)="openAssetCreationModal()">
-        <ion-icon name="add"></ion-icon>
-      </ion-fab-button>
-    </ion-fab>
+    <ion-text color="medium">Add an asset to get started</ion-text>
+    <div class="small-spacer"></div>
+    <ion-button shape="round" (click)="openAssetCreationModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-button>
   </div>
 </ng-template>
 
