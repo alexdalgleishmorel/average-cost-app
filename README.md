@@ -37,4 +37,4 @@ The app operates without an external database, allowing for simplicity and user 
 5. **[Alpha Vantage Stock API](https://www.alphavantage.co/documentation/)**
 
 ## Demo Video
-***Coming Soon***
+https://youtu.be/BLWp4dxiaz0
