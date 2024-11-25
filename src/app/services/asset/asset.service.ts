@@ -225,7 +225,7 @@ export class AssetService {
         for (let date in timeSeries) {
           formattedData.push({
             date: date,
-            value: asset.type === AssetType.CRYPTO ? Number(timeSeries[date]['4a. close (USD)']) : Number(timeSeries[date]['4. close'])
+            value: Number(timeSeries[date]['4. close'])
           });
         }
         return {
